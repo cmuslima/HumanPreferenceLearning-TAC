@@ -1,0 +1,200 @@
+_wandb:
+    value:
+        cli_version: 0.26.0
+        e:
+            7x6v9btsjypvlxvizgr7odgfhxxdzc90:
+                codePath: train_QPA.ipynb
+                codePathLocal: train_QPA.ipynb
+                cpu_count: 20
+                cpu_count_logical: 20
+                cudaVersion: "13.0"
+                disk:
+                    /:
+                        total: "1966736678912"
+                        used: "1101726916608"
+                executable: /home/callie/miniconda3/envs/rl_env/bin/python3.10
+                gpu: NVIDIA GeForce RTX 5080
+                gpu_count: 1
+                gpu_nvidia:
+                    - architecture: Blackwell
+                      cudaCores: 10752
+                      memoryTotal: "17094934528"
+                      name: NVIDIA GeForce RTX 5080
+                      uuid: GPU-7b5edb9f-17b0-2a87-70f1-e6f43bb605b9
+                host: callie-research
+                memory:
+                    total: "134688055296"
+                os: Linux-6.17.0-14-generic-x86_64-with-glibc2.39
+                program: train_QPA.ipynb
+                python: CPython 3.10.20
+                root: /home/callie/Downloads/QPA-master
+                startedAt: "2026-04-21T22:49:22.645597Z"
+                writerId: 7x6v9btsjypvlxvizgr7odgfhxxdzc90
+        m: []
+        python_version: 3.10.20
+        t:
+            "1":
+                - 1
+                - 50
+            "2":
+                - 1
+                - 50
+            "3":
+                - 13
+                - 16
+            "4": 3.10.20
+            "5": 0.26.0
+            "8":
+                - 1
+            "12": 0.26.0
+            "13": linux-x86_64
+activation:
+    value: tanh
+agent_class:
+    value: agent.sac.SACAgent
+agent_name:
+    value: sac
+agent_params_action_dim:
+    value: 6
+agent_params_action_range:
+    value:
+        - -1
+        - 1
+agent_params_actor_betas:
+    value:
+        - 0.9
+        - 0.999
+agent_params_actor_cfg:
+    value: ${diag_gaussian_actor}
+agent_params_actor_lr:
+    value: 0.0001
+agent_params_actor_update_frequency:
+    value: 1
+agent_params_alpha_betas:
+    value:
+        - 0.9
+        - 0.999
+agent_params_alpha_lr:
+    value: 0.0001
+agent_params_batch_size:
+    value: 1024
+agent_params_critic_betas:
+    value:
+        - 0.9
+        - 0.999
+agent_params_critic_cfg:
+    value: ${double_q_critic}
+agent_params_critic_lr:
+    value: 0.0001
+agent_params_critic_target_update_frequency:
+    value: 2
+agent_params_critic_tau:
+    value: 0.005
+agent_params_device:
+    value: ${device}
+agent_params_discount:
+    value: 0.99
+agent_params_init_temperature:
+    value: 0.1
+agent_params_learnable_temperature:
+    value: true
+agent_params_obs_dim:
+    value: 24
+agent_params_wandb:
+    value: ${wandb}
+data_aug_ratio:
+    value: 20
+device:
+    value: cuda
+diag_gaussian_actor_class:
+    value: agent.actor.DiagGaussianActor
+diag_gaussian_actor_params_action_dim:
+    value: ${agent.params.action_dim}
+diag_gaussian_actor_params_hidden_depth:
+    value: 2
+diag_gaussian_actor_params_hidden_dim:
+    value: 1024
+diag_gaussian_actor_params_log_std_bounds:
+    value:
+        - -5
+        - 2
+diag_gaussian_actor_params_obs_dim:
+    value: ${agent.params.obs_dim}
+double_q_critic_class:
+    value: agent.critic.DoubleQCritic
+double_q_critic_params_action_dim:
+    value: ${agent.params.action_dim}
+double_q_critic_params_hidden_depth:
+    value: 2
+double_q_critic_params_hidden_dim:
+    value: 1024
+double_q_critic_params_obs_dim:
+    value: ${agent.params.obs_dim}
+ensemble_size:
+    value: 1
+env:
+    value: walker_walk
+env_suite:
+    value: dmc
+eval_frequency:
+    value: 10000
+experiment:
+    value: QPA
+explore:
+    value: false
+gradient_update:
+    value: 1
+her_ratio:
+    value: 0.5
+label_margin:
+    value: 0
+large_batch:
+    value: 10
+max_feedback:
+    value: 100
+max_reward_buffer_size:
+    value: 10
+num_eval_episodes:
+    value: 10
+num_interact:
+    value: 20000
+num_seed_steps:
+    value: 1000
+num_train_steps:
+    value: 1e+06
+num_unsup_steps:
+    value: 0
+replay_buffer_capacity:
+    value: 1e+06
+reset_update:
+    value: 100
+reward_batch:
+    value: 10
+reward_lr:
+    value: 0.0003
+reward_schedule:
+    value: 0
+reward_update:
+    value: 2000
+seed:
+    value: 5
+segment:
+    value: 50
+teacher_beta:
+    value: -1
+teacher_eps_equal:
+    value: 0
+teacher_eps_mistake:
+    value: 0
+teacher_eps_skip:
+    value: 0
+teacher_gamma:
+    value: 1
+topK:
+    value: 5
+wandb:
+    value: true
+wandb_entity:
+    value: musliman
+wandb_project:
+    value: PbRL_Human_Preferences_Benchmarking

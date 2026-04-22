@@ -1,0 +1,16 @@
+name: rl_env
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - torch==2.8.0
+      - gymnasium==1.1.1
+      - mujoco==3.3.5
+      - dm_control==1.0.31
+      - metaworld==3.0.0
+      - git+https://github.com/facebookresearch/hydra@0.11_branch
+      - setuptools<70.0.0
+      - wandb
+      - shimmy==2.0.1

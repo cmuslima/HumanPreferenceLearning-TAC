@@ -1,0 +1,83 @@
+rewatch_a: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+rewatch_b: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+rewatch_both: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+(10, 50, 30) (10, 50, 30) (10, 1) (10,)
+Saved feedback session 1 to human_feedback_data/1/session_001.pkl
+Iter 0, Ensemble Acc: [0.445], Loss: 0.7365138530731201
+Iter 1, Ensemble Acc: [0.6175], Loss: 0.607043668627739
+Iter 2, Ensemble Acc: [0.70333333], Loss: 0.5278925200303396
+Iter 3, Ensemble Acc: [0.7625], Loss: 0.46590109914541245
+Iter 4, Ensemble Acc: [0.809], Loss: 0.41396608054637907
+Iter 5, Ensemble Acc: [0.84083333], Loss: 0.37137385209401447
+Iter 6, Ensemble Acc: [0.86357143], Loss: 0.3368518905980246
+Iter 7, Ensemble Acc: [0.880625], Loss: 0.3073037099093199
+Iter 8, Ensemble Acc: [0.89388889], Loss: 0.28285492956638336
+Iter 9, Ensemble Acc: [0.9045], Loss: 0.26201735287904737
+Iter 10, Ensemble Acc: [0.91318182], Loss: 0.24402389404448596
+Iter 11, Ensemble Acc: [0.92041667], Loss: 0.22811694629490376
+Iter 12, Ensemble Acc: [0.92653846], Loss: 0.21381750989418763
+Iter 13, Ensemble Acc: [0.93178571], Loss: 0.20086580594735487
+Iter 14, Ensemble Acc: [0.93633333], Loss: 0.18960498968760173
+Iter 15, Ensemble Acc: [0.9403125], Loss: 0.17969991150312126
+Iter 16, Ensemble Acc: [0.94382353], Loss: 0.17079266577082522
+Iter 17, Ensemble Acc: [0.94694444], Loss: 0.16284320637997654
+Iter 18, Ensemble Acc: [0.94973684], Loss: 0.15537535056079688
+Iter 19, Ensemble Acc: [0.95225], Loss: 0.1488411907106638
+Iter 20, Ensemble Acc: [0.95452381], Loss: 0.14245847373136453
+Iter 21, Ensemble Acc: [0.95659091], Loss: 0.13684159712019292
+Iter 22, Ensemble Acc: [0.95847826], Loss: 0.13159493867145933
+Iter 23, Ensemble Acc: [0.96020833], Loss: 0.12661804720604172
+Iter 24, Ensemble Acc: [0.9618], Loss: 0.12233948919922114
+Iter 25, Ensemble Acc: [0.96326923], Loss: 0.1183089203057954
+Iter 26, Ensemble Acc: [0.96462963], Loss: 0.11437069283177455
+Iter 27, Ensemble Acc: [0.96589286], Loss: 0.11070975890782263
+Iter 28, Ensemble Acc: [0.96706897], Loss: 0.10723138398266044
+Iter 29, Ensemble Acc: [0.96816667], Loss: 0.10412577434132496
+Iter 30, Ensemble Acc: [0.96919355], Loss: 0.1010614165795907
+Iter 31, Ensemble Acc: [0.97015625], Loss: 0.09818794229067862
+Iter 32, Ensemble Acc: [0.97106061], Loss: 0.09550968049602075
+Iter 33, Ensemble Acc: [0.97191176], Loss: 0.0929634694064803
+Iter 34, Ensemble Acc: [0.97271429], Loss: 0.09051449768511312
+Iter 35, Ensemble Acc: [0.97347222], Loss: 0.08820289826124078
+Iter 36, Ensemble Acc: [0.97418919], Loss: 0.0859684776640623
+Iter 37, Ensemble Acc: [0.97486842], Loss: 0.0839040190054986
+Iter 38, Ensemble Acc: [0.97551282], Loss: 0.08190743842472632
+Iter 39, Ensemble Acc: [0.976125], Loss: 0.07996255508624017
+Iter 40, Ensemble Acc: [0.97670732], Loss: 0.07823903692840803
+Iter 41, Ensemble Acc: [0.9772619], Loss: 0.076479499505478
+Iter 42, Ensemble Acc: [0.9777907], Loss: 0.07481346852254382
+Iter 43, Ensemble Acc: [0.97829545], Loss: 0.07322658693671903
+Iter 44, Ensemble Acc: [0.97877778], Loss: 0.07169665622835358
+Iter 45, Ensemble Acc: [0.97923913], Loss: 0.07020436994650442
+Iter 46, Ensemble Acc: [0.97968085], Loss: 0.06886067201799535
+just finished learning reward model
+ERROR:tornado.application:Exception in callback functools.partial(<bound method IOLoop._discard_future_result of <tornado.platform.asyncio.AsyncIOMainLoop object at 0x7d3bd03f1ba0>>, <Task finished name='Task-43' coro=<Kernel.enter_eventloop.<locals>.advance_eventloop() done, defined at /home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/kernelbase.py:514> exception=ZMQError('Socket operation on non-socket')>)
+Traceback (most recent call last):
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/tornado/ioloop.py", line 758, in _run_callback
+    ret = callback()
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/tornado/ioloop.py", line 782, in _discard_future_result
+    future.result()
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/kernelbase.py", line 521, in advance_eventloop
+    eventloop(self)
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/eventloops.py", line 151, in loop_qt
+    _notify_stream_qt(kernel)  # install hook to stop event loop.
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/eventloops.py", line 113, in _notify_stream_qt
+    fd = shell_stream.getsockopt(zmq.FD)
+  File "zmq/backend/cython/_zmq.py", line 882, in zmq.backend.cython._zmq.Socket.get
+  File "zmq/backend/cython/_zmq.py", line 1339, in zmq.backend.cython._zmq._check_closed
+zmq.error.ZMQError: Socket operation on non-socket
+ERROR:tornado.application:Exception in callback functools.partial(<bound method IOLoop._discard_future_result of <tornado.platform.asyncio.AsyncIOMainLoop object at 0x7d3bd03f1ba0>>, <Task finished name='Task-43' coro=<Kernel.enter_eventloop.<locals>.advance_eventloop() done, defined at /home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/kernelbase.py:514> exception=ZMQError('Socket operation on non-socket')>)
+Traceback (most recent call last):
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/tornado/ioloop.py", line 758, in _run_callback
+    ret = callback()
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/tornado/ioloop.py", line 782, in _discard_future_result
+    future.result()
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/kernelbase.py", line 521, in advance_eventloop
+    eventloop(self)
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/eventloops.py", line 151, in loop_qt
+    _notify_stream_qt(kernel)  # install hook to stop event loop.
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/eventloops.py", line 113, in _notify_stream_qt
+    fd = shell_stream.getsockopt(zmq.FD)
+  File "zmq/backend/cython/_zmq.py", line 882, in zmq.backend.cython._zmq.Socket.get
+  File "zmq/backend/cython/_zmq.py", line 1339, in zmq.backend.cython._zmq._check_closed
+zmq.error.ZMQError: Socket operation on non-socket

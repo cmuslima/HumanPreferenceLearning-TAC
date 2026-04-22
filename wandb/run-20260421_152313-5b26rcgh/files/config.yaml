@@ -1,0 +1,98 @@
+_wandb:
+    value:
+        cli_version: 0.26.0
+        e:
+            6a1c91nzpmedl88wuuq961iq2lw9z297:
+                codePath: train_QPA.ipynb
+                codePathLocal: train_QPA.ipynb
+                cpu_count: 20
+                cpu_count_logical: 20
+                cudaVersion: "13.0"
+                disk:
+                    /:
+                        total: "1966736678912"
+                        used: "1101112315904"
+                executable: /home/callie/miniconda3/envs/rl_env/bin/python3.10
+                gpu: NVIDIA GeForce RTX 5080
+                gpu_count: 1
+                gpu_nvidia:
+                    - architecture: Blackwell
+                      cudaCores: 10752
+                      memoryTotal: "17094934528"
+                      name: NVIDIA GeForce RTX 5080
+                      uuid: GPU-7b5edb9f-17b0-2a87-70f1-e6f43bb605b9
+                host: callie-research
+                memory:
+                    total: "134688055296"
+                os: Linux-6.17.0-14-generic-x86_64-with-glibc2.39
+                program: train_QPA.ipynb
+                python: CPython 3.10.20
+                root: /home/callie/Downloads/QPA-master
+                startedAt: "2026-04-21T21:23:13.041356Z"
+                writerId: 6a1c91nzpmedl88wuuq961iq2lw9z297
+        m: []
+        python_version: 3.10.20
+        t:
+            "1":
+                - 1
+                - 50
+            "2":
+                - 1
+                - 50
+            "3":
+                - 16
+                - 17
+            "4": 3.10.20
+            "5": 0.26.0
+            "8":
+                - 1
+            "12": 0.26.0
+            "13": linux-x86_64
+content:
+    value:
+        activation: tanh
+        agent: '{''name'': ''sac'', ''class'': ''agent.sac.SACAgent'', ''params'': {''obs_dim'': ''???'', ''action_dim'': ''???'', ''action_range'': ''???'', ''device'': ''${device}'', ''critic_cfg'': ''${double_q_critic}'', ''actor_cfg'': ''${diag_gaussian_actor}'', ''discount'': 0.99, ''init_temperature'': 0.1, ''alpha_lr'': 0.0001, ''alpha_betas'': [0.9, 0.999], ''actor_lr'': 0.0001, ''actor_betas'': [0.9, 0.999], ''actor_update_frequency'': 1, ''critic_lr'': 0.0001, ''critic_betas'': [0.9, 0.999], ''critic_tau'': 0.005, ''critic_target_update_frequency'': 2, ''batch_size'': 1024, ''learnable_temperature'': True, ''wandb'': ''${wandb}''}}'
+        data_aug_ratio: "20"
+        device: cuda
+        diag_gaussian_actor: '{''class'': ''agent.actor.DiagGaussianActor'', ''params'': {''obs_dim'': ''${agent.params.obs_dim}'', ''action_dim'': ''${agent.params.action_dim}'', ''hidden_depth'': 2, ''hidden_dim'': 1024, ''log_std_bounds'': [-5, 2]}}'
+        double_q_critic: '{''class'': ''agent.critic.DoubleQCritic'', ''params'': {''obs_dim'': ''${agent.params.obs_dim}'', ''action_dim'': ''${agent.params.action_dim}'', ''hidden_dim'': 1024, ''hidden_depth'': 2}}'
+        ensemble_size: "1"
+        env: walker_walk
+        env_suite: dmc
+        eval_frequency: "10000"
+        experiment: QPA
+        explore: "False"
+        gradient_update: "1"
+        her_ratio: "0.5"
+        label_margin: "0.0"
+        large_batch: "10"
+        max_feedback: "100"
+        max_reward_buffer_size: "10"
+        num_eval_episodes: "10"
+        num_interact: "20000"
+        num_seed_steps: "1000"
+        num_train_steps: "1000000.0"
+        num_unsup_steps: "9000"
+        replay_buffer_capacity: ${num_train_steps}
+        reset_update: "100"
+        reward_batch: "10"
+        reward_lr: "0.0003"
+        reward_schedule: "0"
+        reward_update: "2000"
+        seed: "5"
+        segment: "50"
+        teacher_beta: "-1"
+        teacher_eps_equal: "0"
+        teacher_eps_mistake: "0"
+        teacher_eps_skip: "0"
+        teacher_gamma: "1"
+        topK: "5"
+        wandb: "True"
+        wandb_entity: musliman
+        wandb_project: PbRL_Human_Preferences_Benchmarking
+flags:
+    value:
+        readonly: null
+        struct: false
+parent:
+    value: null

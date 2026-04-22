@@ -1,0 +1,1 @@
+{"_step":5000,"reward_model/train_acc":0.9800793650793651,"reward_model/reward_loss":0.062091754324408985,"Q_loss":0.035712406039237976,"actor_loss":-3.693800926208496,"_wandb":{"runtime":116},"_runtime":116.650264617,"_timestamp":1.7768136535771606e+09}

@@ -1,0 +1,95 @@
+finished an epi
+finished an epi
+Vote received: 0.5, fig exists: True
+Window hidden
+Vote received: 0.5, fig exists: True
+Window hidden
+Vote received: 0.5, fig exists: True
+Window hidden
+Vote received: 0.5, fig exists: True
+Window hidden
+Vote received: 0.5, fig exists: True
+Window hidden
+Vote received: 0.5, fig exists: True
+Window hidden
+Vote received: 0.5, fig exists: True
+Window hidden
+Vote received: 0.5, fig exists: True
+Window hidden
+Vote received: 0.5, fig exists: True
+Window hidden
+Vote received: 0.5, fig exists: True
+Window hidden
+rewatch_a: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+rewatch_b: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+rewatch_both: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+(10, 50, 30) (10, 50, 30) (10, 1) (10,)
+Saved feedback session 1 to human_feedback_data/1/session_001.pkl
+Iter 0, Ensemble Acc: [0.505], Loss: 0.7160539031028748
+Iter 1, Ensemble Acc: [0.625], Loss: 0.597276508808136
+Iter 2, Ensemble Acc: [0.72], Loss: 0.5143554906050364
+Iter 3, Ensemble Acc: [0.76375], Loss: 0.4565977454185486
+Iter 4, Ensemble Acc: [0.792], Loss: 0.4121018499135971
+Iter 5, Ensemble Acc: [0.81333333], Loss: 0.3746777946750323
+Iter 6, Ensemble Acc: [0.83571429], Loss: 0.34167202029909405
+Iter 7, Ensemble Acc: [0.855], Loss: 0.3145894855260849
+Iter 8, Ensemble Acc: [0.86888889], Loss: 0.29139282802740735
+Iter 9, Ensemble Acc: [0.882], Loss: 0.27071279659867287
+Iter 10, Ensemble Acc: [0.89272727], Loss: 0.25283453884449875
+Iter 11, Ensemble Acc: [0.90166667], Loss: 0.2371028165022532
+Iter 12, Ensemble Acc: [0.90923077], Loss: 0.22342028870032385
+Iter 13, Ensemble Acc: [0.91571429], Loss: 0.21119079206671035
+Iter 14, Ensemble Acc: [0.92133333], Loss: 0.19961938858032227
+Iter 15, Ensemble Acc: [0.92625], Loss: 0.18946159188635647
+Iter 16, Ensemble Acc: [0.93058824], Loss: 0.18025341651895466
+Iter 17, Ensemble Acc: [0.93444444], Loss: 0.17205178261631066
+Iter 18, Ensemble Acc: [0.93789474], Loss: 0.16431623305145063
+Iter 19, Ensemble Acc: [0.941], Loss: 0.15723391436040401
+Iter 20, Ensemble Acc: [0.94380952], Loss: 0.15089312550567446
+Iter 21, Ensemble Acc: [0.94636364], Loss: 0.14488727328452197
+Iter 22, Ensemble Acc: [0.94869565], Loss: 0.1393617565703133
+Iter 23, Ensemble Acc: [0.95083333], Loss: 0.1342514252755791
+Iter 24, Ensemble Acc: [0.9528], Loss: 0.12959323272109033
+Iter 25, Ensemble Acc: [0.95461538], Loss: 0.12527791869181854
+Iter 26, Ensemble Acc: [0.9562963], Loss: 0.12121266988968407
+Iter 27, Ensemble Acc: [0.95785714], Loss: 0.11745905244190778
+Iter 28, Ensemble Acc: [0.95931034], Loss: 0.1138923673665729
+Iter 29, Ensemble Acc: [0.96066667], Loss: 0.11047699600458145
+Iter 30, Ensemble Acc: [0.96193548], Loss: 0.1072081768164231
+Iter 31, Ensemble Acc: [0.963125], Loss: 0.1041597670991905
+Iter 32, Ensemble Acc: [0.96424242], Loss: 0.10123616386430734
+Iter 33, Ensemble Acc: [0.96529412], Loss: 0.09853957582484274
+Iter 34, Ensemble Acc: [0.96628571], Loss: 0.09596473638500486
+Iter 35, Ensemble Acc: [0.96722222], Loss: 0.09352647730459769
+Iter 36, Ensemble Acc: [0.96810811], Loss: 0.09118178559819588
+Iter 37, Ensemble Acc: [0.96894737], Loss: 0.08895029438855617
+Iter 38, Ensemble Acc: [0.96974359], Loss: 0.0868797916918993
+Iter 39, Ensemble Acc: [0.9705], Loss: 0.08487860390450805
+Iter 40, Ensemble Acc: [0.97121951], Loss: 0.08301338510269798
+Iter 41, Ensemble Acc: [0.97190476], Loss: 0.0811894939258872
+Iter 42, Ensemble Acc: [0.97255814], Loss: 0.0794329733999316
+Iter 43, Ensemble Acc: [0.97318182], Loss: 0.07775565809358588
+Iter 44, Ensemble Acc: [0.97377778], Loss: 0.07614408695242471
+Iter 45, Ensemble Acc: [0.97434783], Loss: 0.07459902116502433
+Iter 46, Ensemble Acc: [0.97489362], Loss: 0.07313088404926214
+Iter 47, Ensemble Acc: [0.97541667], Loss: 0.07171169994398952
+Iter 48, Ensemble Acc: [0.97591837], Loss: 0.0703583711435144
+Iter 49, Ensemble Acc: [0.9764], Loss: 0.06909209844656289
+Iter 50, Ensemble Acc: [0.97686275], Loss: 0.06783129917640313
+Iter 51, Ensemble Acc: [0.97730769], Loss: 0.0666051501981341
+Iter 52, Ensemble Acc: [0.97773585], Loss: 0.06540987073478974
+Iter 53, Ensemble Acc: [0.97814815], Loss: 0.06427805127869188
+Iter 54, Ensemble Acc: [0.97854545], Loss: 0.06318838612853804
+Iter 55, Ensemble Acc: [0.97892857], Loss: 0.06214620327227749
+Iter 56, Ensemble Acc: [0.97929825], Loss: 0.06112428732101985
+Iter 57, Ensemble Acc: [0.97965517], Loss: 0.06012557245437698
+just finished learning reward model
+finished an epi
+finished an epi
+finished an epi
+finished an epi
+finished an epi
+finished an epi
+finished an epi
+finished an epi
+finished an epi

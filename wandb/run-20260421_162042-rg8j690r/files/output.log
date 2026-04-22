@@ -1,0 +1,33 @@
+workspace: /home/callie/Downloads/QPA-master
+Traceback (most recent call last):
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/matplotlib/cbook.py", line 361, in process
+    func(*args, **kwargs)
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/matplotlib/widgets.py", line 216, in _click
+    event.canvas.grab_mouse(self.ax)
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/matplotlib/backend_bases.py", line 1837, in grab_mouse
+    raise RuntimeError("Another Axes already grabs mouse input")
+RuntimeError: Another Axes already grabs mouse input
+Traceback (most recent call last):
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/matplotlib/cbook.py", line 361, in process
+    func(*args, **kwargs)
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/matplotlib/widgets.py", line 216, in _click
+    event.canvas.grab_mouse(self.ax)
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/matplotlib/backend_bases.py", line 1837, in grab_mouse
+    raise RuntimeError("Another Axes already grabs mouse input")
+RuntimeError: Another Axes already grabs mouse input
+Traceback (most recent call last):
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/matplotlib/cbook.py", line 361, in process
+    func(*args, **kwargs)
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/matplotlib/widgets.py", line 216, in _click
+    event.canvas.grab_mouse(self.ax)
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/matplotlib/backend_bases.py", line 1837, in grab_mouse
+    raise RuntimeError("Another Axes already grabs mouse input")
+RuntimeError: Another Axes already grabs mouse input
+Traceback (most recent call last):
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/matplotlib/cbook.py", line 361, in process
+    func(*args, **kwargs)
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/matplotlib/widgets.py", line 216, in _click
+    event.canvas.grab_mouse(self.ax)
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/matplotlib/backend_bases.py", line 1837, in grab_mouse
+    raise RuntimeError("Another Axes already grabs mouse input")
+RuntimeError: Another Axes already grabs mouse input

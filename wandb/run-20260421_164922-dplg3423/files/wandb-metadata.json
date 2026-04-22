@@ -1,0 +1,35 @@
+{
+  "os": "Linux-6.17.0-14-generic-x86_64-with-glibc2.39",
+  "python": "CPython 3.10.20",
+  "startedAt": "2026-04-21T22:49:22.645597Z",
+  "program": "train_QPA.ipynb",
+  "codePath": "train_QPA.ipynb",
+  "codePathLocal": "train_QPA.ipynb",
+  "root": "/home/callie/Downloads/QPA-master",
+  "host": "callie-research",
+  "executable": "/home/callie/miniconda3/envs/rl_env/bin/python3.10",
+  "cpu_count": 20,
+  "cpu_count_logical": 20,
+  "gpu": "NVIDIA GeForce RTX 5080",
+  "gpu_count": 1,
+  "disk": {
+    "/": {
+      "total": "1966736678912",
+      "used": "1101726916608"
+    }
+  },
+  "memory": {
+    "total": "134688055296"
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA GeForce RTX 5080",
+      "memoryTotal": "17094934528",
+      "cudaCores": 10752,
+      "architecture": "Blackwell",
+      "uuid": "GPU-7b5edb9f-17b0-2a87-70f1-e6f43bb605b9"
+    }
+  ],
+  "cudaVersion": "13.0",
+  "writerId": "7x6v9btsjypvlxvizgr7odgfhxxdzc90"
+}

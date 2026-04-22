@@ -1,0 +1,4 @@
+workspace: /home/callie/Downloads/QPA-master
+/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/matplotlib/animation.py:908: UserWarning: Animation was deleted without rendering anything. This is most likely not intended. To prevent deletion, assign the Animation to a variable, e.g. `anim`, that exists until you output the Animation using `plt.show()` or `anim.save()`.
+  warnings.warn(
+Saved feedback session 1 to human_feedback_data/1/session_001.pkl

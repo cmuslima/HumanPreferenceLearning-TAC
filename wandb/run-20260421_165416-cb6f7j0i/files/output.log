@@ -1,0 +1,35 @@
+rewatch_a: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+rewatch_b: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+rewatch_both: [0, 0, 0, 0, 0, 0, 5, 0, 0, 0]
+(10, 50, 30) (10, 50, 30) (10, 1) (10,)
+Saved feedback session 1 to human_feedback_data/1/session_001.pkl
+ERROR:tornado.application:Exception in callback functools.partial(<bound method IOLoop._discard_future_result of <tornado.platform.asyncio.AsyncIOMainLoop object at 0x76349c129b10>>, <Task finished name='Task-43' coro=<Kernel.enter_eventloop.<locals>.advance_eventloop() done, defined at /home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/kernelbase.py:514> exception=ZMQError('Socket operation on non-socket')>)
+Traceback (most recent call last):
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/tornado/ioloop.py", line 758, in _run_callback
+    ret = callback()
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/tornado/ioloop.py", line 782, in _discard_future_result
+    future.result()
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/kernelbase.py", line 521, in advance_eventloop
+    eventloop(self)
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/eventloops.py", line 151, in loop_qt
+    _notify_stream_qt(kernel)  # install hook to stop event loop.
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/eventloops.py", line 113, in _notify_stream_qt
+    fd = shell_stream.getsockopt(zmq.FD)
+  File "zmq/backend/cython/_zmq.py", line 882, in zmq.backend.cython._zmq.Socket.get
+  File "zmq/backend/cython/_zmq.py", line 1339, in zmq.backend.cython._zmq._check_closed
+zmq.error.ZMQError: Socket operation on non-socket
+ERROR:tornado.application:Exception in callback functools.partial(<bound method IOLoop._discard_future_result of <tornado.platform.asyncio.AsyncIOMainLoop object at 0x76349c129b10>>, <Task finished name='Task-43' coro=<Kernel.enter_eventloop.<locals>.advance_eventloop() done, defined at /home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/kernelbase.py:514> exception=ZMQError('Socket operation on non-socket')>)
+Traceback (most recent call last):
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/tornado/ioloop.py", line 758, in _run_callback
+    ret = callback()
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/tornado/ioloop.py", line 782, in _discard_future_result
+    future.result()
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/kernelbase.py", line 521, in advance_eventloop
+    eventloop(self)
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/eventloops.py", line 151, in loop_qt
+    _notify_stream_qt(kernel)  # install hook to stop event loop.
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/eventloops.py", line 113, in _notify_stream_qt
+    fd = shell_stream.getsockopt(zmq.FD)
+  File "zmq/backend/cython/_zmq.py", line 882, in zmq.backend.cython._zmq.Socket.get
+  File "zmq/backend/cython/_zmq.py", line 1339, in zmq.backend.cython._zmq._check_closed
+zmq.error.ZMQError: Socket operation on non-socket

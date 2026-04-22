@@ -1,0 +1,114 @@
+finished an epi
+finished an epi
+Vote received: 0.5, fig exists: True
+Vote received: 0.5, fig exists: True
+Vote received: 0.5, fig exists: True
+Vote received: 0.5, fig exists: True
+Vote received: 0.5, fig exists: True
+Vote received: 0.5, fig exists: True
+Vote received: 0.5, fig exists: True
+Vote received: 0.5, fig exists: True
+Vote received: 0.5, fig exists: True
+Vote received: 0.5, fig exists: True
+rewatch_a: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+rewatch_b: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+rewatch_both: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+(10, 50, 30) (10, 50, 30) (10, 1) (10,)
+Saved feedback session 1 to human_feedback_data/1/session_001.pkl
+Iter 0, Ensemble Acc: [0.47], Loss: 0.8390750288963318
+Iter 1, Ensemble Acc: [0.57], Loss: 0.6979910433292389
+Iter 2, Ensemble Acc: [0.68666667], Loss: 0.6007672945658366
+Iter 3, Ensemble Acc: [0.75875], Loss: 0.52397171407938
+Iter 4, Ensemble Acc: [0.804], Loss: 0.45818205177783966
+Iter 5, Ensemble Acc: [0.8325], Loss: 0.4110201100508372
+Iter 6, Ensemble Acc: [0.85142857], Loss: 0.3729409532887595
+Iter 7, Ensemble Acc: [0.868125], Loss: 0.3406743025407195
+Iter 8, Ensemble Acc: [0.88], Loss: 0.3142869969209035
+Iter 9, Ensemble Acc: [0.8895], Loss: 0.2923426128923893
+Iter 10, Ensemble Acc: [0.89818182], Loss: 0.273937236179005
+Iter 11, Ensemble Acc: [0.90541667], Loss: 0.2575312020877997
+Iter 12, Ensemble Acc: [0.91038462], Loss: 0.24424469356353468
+Iter 13, Ensemble Acc: [0.91571429], Loss: 0.23118796146341733
+Iter 14, Ensemble Acc: [0.92033333], Loss: 0.21950622126460076
+Iter 15, Ensemble Acc: [0.9253125], Loss: 0.2077282485552132
+Iter 16, Ensemble Acc: [0.92941176], Loss: 0.19800623528221073
+Iter 17, Ensemble Acc: [0.93277778], Loss: 0.18933138458265197
+Iter 18, Ensemble Acc: [0.93631579], Loss: 0.18051913880596035
+Iter 19, Ensemble Acc: [0.93925], Loss: 0.1729611718095839
+Iter 20, Ensemble Acc: [0.94214286], Loss: 0.16581823215598152
+Iter 21, Ensemble Acc: [0.94454545], Loss: 0.15969306450675835
+Iter 22, Ensemble Acc: [0.94630435], Loss: 0.15430408343672752
+Iter 23, Ensemble Acc: [0.94854167], Loss: 0.14887713097656766
+Iter 24, Ensemble Acc: [0.9506], Loss: 0.14399840436875821
+Iter 25, Ensemble Acc: [0.95211538], Loss: 0.13976134051783726
+Iter 26, Ensemble Acc: [0.95388889], Loss: 0.13519863556656572
+Iter 27, Ensemble Acc: [0.95535714], Loss: 0.13111462324325526
+Iter 28, Ensemble Acc: [0.95689655], Loss: 0.1270895223293839
+Iter 29, Ensemble Acc: [0.95833333], Loss: 0.12323794526358446
+Iter 30, Ensemble Acc: [0.95967742], Loss: 0.11968083784825378
+Iter 31, Ensemble Acc: [0.9609375], Loss: 0.11634560319362208
+Iter 32, Ensemble Acc: [0.96212121], Loss: 0.11317666416818445
+Iter 33, Ensemble Acc: [0.96323529], Loss: 0.11017127340549931
+Iter 34, Ensemble Acc: [0.96428571], Loss: 0.10740544141403266
+Iter 35, Ensemble Acc: [0.96527778], Loss: 0.10470060678198934
+Iter 36, Ensemble Acc: [0.96621622], Loss: 0.10210914084234753
+Iter 37, Ensemble Acc: [0.96710526], Loss: 0.09965627826750278
+Iter 38, Ensemble Acc: [0.96794872], Loss: 0.09733050435972519
+Iter 39, Ensemble Acc: [0.96875], Loss: 0.09505264211911708
+Iter 40, Ensemble Acc: [0.9695122], Loss: 0.09287869765582245
+Iter 41, Ensemble Acc: [0.9702381], Loss: 0.09081886734236919
+Iter 42, Ensemble Acc: [0.97093023], Loss: 0.08881641511783697
+Iter 43, Ensemble Acc: [0.97159091], Loss: 0.08693221852776002
+Iter 44, Ensemble Acc: [0.97222222], Loss: 0.0851860933419731
+Iter 45, Ensemble Acc: [0.97282609], Loss: 0.08343820699045192
+Iter 46, Ensemble Acc: [0.97340426], Loss: 0.08177823985510684
+Iter 47, Ensemble Acc: [0.97395833], Loss: 0.08015961272758432
+Iter 48, Ensemble Acc: [0.9744898], Loss: 0.07859197409101287
+Iter 49, Ensemble Acc: [0.975], Loss: 0.07712389267981053
+Iter 50, Ensemble Acc: [0.97539216], Loss: 0.07580817885258619
+Iter 51, Ensemble Acc: [0.97586538], Loss: 0.07444259621955168
+Iter 52, Ensemble Acc: [0.97632075], Loss: 0.07310374435652399
+Iter 53, Ensemble Acc: [0.97675926], Loss: 0.07181258807907363
+Iter 54, Ensemble Acc: [0.97718182], Loss: 0.0705781172580001
+Iter 55, Ensemble Acc: [0.97758929], Loss: 0.06938933929944012
+Iter 56, Ensemble Acc: [0.97798246], Loss: 0.06824293056617312
+Iter 57, Ensemble Acc: [0.97836207], Loss: 0.06715789761249746
+Iter 58, Ensemble Acc: [0.97872881], Loss: 0.06606723374481928
+Iter 59, Ensemble Acc: [0.97908333], Loss: 0.06503093880601227
+Iter 60, Ensemble Acc: [0.97942623], Loss: 0.06402149599915767
+Iter 61, Ensemble Acc: [0.97975806], Loss: 0.06304430072346041
+just finished learning reward model
+finished an epi
+finished an epi
+finished an epi
+finished an epi
+ERROR:tornado.application:Exception in callback functools.partial(<bound method IOLoop._discard_future_result of <tornado.platform.asyncio.AsyncIOMainLoop object at 0x7a950c3c5a50>>, <Task finished name='Task-43' coro=<Kernel.enter_eventloop.<locals>.advance_eventloop() done, defined at /home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/kernelbase.py:514> exception=ZMQError('Socket operation on non-socket')>)
+Traceback (most recent call last):
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/tornado/ioloop.py", line 758, in _run_callback
+    ret = callback()
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/tornado/ioloop.py", line 782, in _discard_future_result
+    future.result()
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/kernelbase.py", line 521, in advance_eventloop
+    eventloop(self)
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/eventloops.py", line 151, in loop_qt
+    _notify_stream_qt(kernel)  # install hook to stop event loop.
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/eventloops.py", line 113, in _notify_stream_qt
+    fd = shell_stream.getsockopt(zmq.FD)
+  File "zmq/backend/cython/_zmq.py", line 882, in zmq.backend.cython._zmq.Socket.get
+  File "zmq/backend/cython/_zmq.py", line 1339, in zmq.backend.cython._zmq._check_closed
+zmq.error.ZMQError: Socket operation on non-socket
+ERROR:tornado.application:Exception in callback functools.partial(<bound method IOLoop._discard_future_result of <tornado.platform.asyncio.AsyncIOMainLoop object at 0x7a950c3c5a50>>, <Task finished name='Task-43' coro=<Kernel.enter_eventloop.<locals>.advance_eventloop() done, defined at /home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/kernelbase.py:514> exception=ZMQError('Socket operation on non-socket')>)
+Traceback (most recent call last):
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/tornado/ioloop.py", line 758, in _run_callback
+    ret = callback()
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/tornado/ioloop.py", line 782, in _discard_future_result
+    future.result()
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/kernelbase.py", line 521, in advance_eventloop
+    eventloop(self)
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/eventloops.py", line 151, in loop_qt
+    _notify_stream_qt(kernel)  # install hook to stop event loop.
+  File "/home/callie/miniconda3/envs/rl_env/lib/python3.10/site-packages/ipykernel/eventloops.py", line 113, in _notify_stream_qt
+    fd = shell_stream.getsockopt(zmq.FD)
+  File "zmq/backend/cython/_zmq.py", line 882, in zmq.backend.cython._zmq.Socket.get
+  File "zmq/backend/cython/_zmq.py", line 1339, in zmq.backend.cython._zmq._check_closed
+zmq.error.ZMQError: Socket operation on non-socket
