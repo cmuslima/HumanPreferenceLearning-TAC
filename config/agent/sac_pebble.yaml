@@ -1,6 +1,6 @@
 agent:
-  name: sac
-  class: agent.sac.SACAgent
+  name: sac_pebble
+  class: agent.sac_pebble.SACAgent
   params:
     obs_dim: ??? # to be specified later
     action_dim: ??? # to be specified later

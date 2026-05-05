@@ -1,25 +1,24 @@
 defaults:
-    - agent: sac_qpa
+  - agent: sac_mrn
     
-experiment: QPA
-# wandb log (need to be specified manually)
-wandb: true
-wandb_project: PbRL_Human_Preferences_Benchmarking
-wandb_entity: musliman
+# this needs to be specified manually
+experiment: MRN
 
 # reward learning
 segment: 50
 activation: tanh
 num_seed_steps: 1000
 num_unsup_steps: 9000
-num_interact: 20000
+num_meta_steps: 5000
+num_interact: 5000
 reward_lr: 0.0003
-reward_batch: 10
-reward_update: 2000
+reward_batch: 128
+reward_update: 200
+feed_type: 1
 reset_update: 100
 topK: 5
-ensemble_size: 1
-max_feedback: 100
+ensemble_size: 3
+max_feedback: 1400
 large_batch: 10
 label_margin: 0.0
 teacher_beta: -1
@@ -27,10 +26,11 @@ teacher_gamma: 1
 teacher_eps_mistake: 0
 teacher_eps_skip: 0
 teacher_eps_equal: 0
+outer_weight: 0.1
 
 # scheduling
 reward_schedule: 0
-gradient_update: 1
+
 num_train_steps: 1e6
 replay_buffer_capacity: ${num_train_steps}
 
@@ -39,24 +39,22 @@ eval_frequency: 10000
 num_eval_episodes: 10
 device: cuda
 
+# logger
+log_frequency: 10000
+log_save_tb: true
+
+# video recorder
+save_video: false
+
 # setups
-seed: 5
+seed: 1
 
-# environment
-env: walker_walk
-env_suite: dmc # or metaworld
+# Environment
+env: dog_stand
+gradient_update: 1
 
-# hyperparameter of QPA 
-data_aug_ratio: 20
-max_reward_buffer_size: 10
-explore: false
-her_ratio: 0.5
-#user study params
-user_study: 0
-render_frames: 0
-frame_size: [125, 200]
 # hydra configuration
 hydra:
-    name: ${env}
-    run:
+  name: ${env}
+  run:
         dir: ./exp/${experiment}/${env}/maxFeedback${max_feedback}_numInteract${num_interact}_seed${seed}

@@ -44,17 +44,21 @@ def make_env(cfg):
 
     # Load raw DMC env
     raw_env = suite.load(domain_name, task_name, task_kwargs={'random': cfg.seed})
-    # Wrap with Shimmy - This converts it to Gymnasium API
-    env = DmControlCompatibilityV0(raw_env, render_mode="rgb_array",
-                                render_kwargs={"height": 240, "width": 380, "camera_id": 0})
+
+    if cfg.render_frames:
+        # Wrap with Shimmy - This converts it to Gymnasium API
+        env = DmControlCompatibilityV0(raw_env, render_mode="rgb_array",
+                                    render_kwargs={"height": cfg.frame_size[0], "width": cfg.frame_size[1], "camera_id": 0})
+    else:
+        env = DmControlCompatibilityV0(raw_env, render_mode=None)
     
     # Flatten observations so they are a vector instead of a dictionary
     env = gym.wrappers.FlattenObservation(env)
-    
+    env.action_space.seed(cfg.seed)        # add this
+    env.observation_space.seed(cfg.seed)   # add this
     # Now this assertion works using the standard Gym naming convention
     assert env.action_space.low.min() >= -1
     assert env.action_space.high.max() <= 1
-
     env.unwrapped.spec = EnvSpec(
     id='dmc_env', 
     entry_point=None, 
@@ -62,16 +66,20 @@ def make_env(cfg):
 )
     return env  # Return ONLY the env
 
-
 def make_metaworld_env(cfg):
     print(f'{cfg.env}-v3')
     env = gym.make("Meta-World/MT1", env_name=f'{cfg.env}-v3', disable_env_checker=True)
-    env.reset(seed=cfg.seed)
-
+    
+    # Seed everything before any reset/sampling
+    env.action_space.seed(cfg.seed)
+    env.observation_space.seed(cfg.seed)
+    env.unwrapped.goal_space.seed(cfg.seed)
     
     env._freeze_rand_vec = False
     env._set_task_called = True
-    return env 
+    
+    env.reset(seed=cfg.seed)
+    return env
 
 
 def ppo_make_env(env_id, seed):
@@ -293,3 +301,28 @@ def to_np(t):
         return np.array([])
     else:
         return t.cpu().detach().numpy()
+
+
+class MetaOptim(torch.optim.Adam):
+    def __init__(self, net, *args, **kwargs):
+        super(MetaOptim, self).__init__(*args, **kwargs)
+        self.net = net
+
+    def set_parameter(self, current_module, name, parameters):
+        if '.' in name:
+            name_split = name.split('.')
+            module_name = name_split[0]
+            rest_name = '.'.join(name_split[1:])
+            for children_name, children in current_module.named_children():
+                if module_name == children_name:
+                    self.set_parameter(children, rest_name, parameters)
+                    break
+        else:
+            current_module._parameters[name] = parameters
+
+    def meta_step(self, grads):
+        group = self.param_groups[0]
+        lr = group['lr']
+        for (name, parameter), grad in zip(self.net.named_parameters(), grads):
+            parameter.detach_()
+            self.set_parameter(self.net, name, parameter.add(grad, alpha=-lr))

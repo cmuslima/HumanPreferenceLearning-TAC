@@ -1,15 +1,13 @@
 import numpy as np
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
-import math
 import utils
 import hydra
 import wandb
 
 from agent import Agent
-from agent.critic import DoubleQCritic
-from agent.actor import DiagGaussianActor
+
+
 
 def compute_state_entropy(obs, full_obs, k):
     batch_size = 500
@@ -28,6 +26,7 @@ def compute_state_entropy(obs, full_obs, k):
         state_entropy = knn_dists
     return state_entropy.unsqueeze(1)
 
+
 class SACAgent(Agent):
     """SAC algorithm."""
     def __init__(self, obs_dim, action_dim, action_range, device, critic_cfg,
@@ -38,6 +37,8 @@ class SACAgent(Agent):
                  normalize_state_entropy=True):
         super().__init__()
 
+        self.obs_dim = obs_dim
+        self.action_dim = action_dim
         self.action_range = action_range
         self.device = torch.device(device)
         self.discount = discount
@@ -49,16 +50,14 @@ class SACAgent(Agent):
         self.critic_cfg = critic_cfg
         self.critic_lr = critic_lr
         self.critic_betas = critic_betas
-        self.s_ent_stats = utils.TorchRunningMeanStd(shape=[1], device=device)
-        self.normalize_state_entropy = normalize_state_entropy
+        self.s_ent_stats = torch.tensor([np.inf, -np.inf], device=device) # min, max
+        self.state_ent = utils.TorchRunningMeanStd(shape=[1], device=device)
         self.init_temperature = init_temperature
-        self.alpha_lr = alpha_lr
         self.alpha_betas = alpha_betas
         self.actor_cfg = actor_cfg
         self.actor_betas = actor_betas
         self.alpha_lr = alpha_lr
         self.wandb = wandb
-        
         self.critic = hydra.utils.instantiate(critic_cfg).to(self.device)
         self.critic_target = hydra.utils.instantiate(critic_cfg).to(
             self.device)
@@ -66,10 +65,8 @@ class SACAgent(Agent):
         self.actor = hydra.utils.instantiate(actor_cfg).to(self.device)
         self.log_alpha = torch.tensor(np.log(init_temperature)).to(self.device)
         self.log_alpha.requires_grad = True
-        
         # set target entropy to -|A|
         self.target_entropy = -action_dim
-
         # optimizers
         self.actor_optimizer = torch.optim.Adam(
             self.actor.parameters(),
@@ -87,9 +84,6 @@ class SACAgent(Agent):
         # change mode
         self.train()
         self.critic_target.train()
-
-        self.critic_loss_last = 100
-    
     def reset_critic(self):
         self.critic = hydra.utils.instantiate(self.critic_cfg).to(self.device)
         self.critic_target = hydra.utils.instantiate(self.critic_cfg).to(
@@ -99,7 +93,6 @@ class SACAgent(Agent):
             self.critic.parameters(),
             lr=self.critic_lr,
             betas=self.critic_betas)
-    
     def reset_actor(self):
         # reset log_alpha
         self.log_alpha = torch.tensor(np.log(self.init_temperature)).to(self.device)
@@ -115,7 +108,6 @@ class SACAgent(Agent):
             self.actor.parameters(),
             lr=self.actor_lr,
             betas=self.actor_betas)
-        
     def train(self, training=True):
         self.training = training
         self.actor.train(training)
@@ -133,9 +125,8 @@ class SACAgent(Agent):
         action = action.clamp(*self.action_range)
         assert action.ndim == 2 and action.shape[0] == 1
         return utils.to_np(action[0])
-
     def update_critic(self, obs, action, reward, next_obs, 
-                      not_done, step, weight=1, weighted_loss=False):
+                      not_done, step):
         
         dist = self.actor(next_obs)
         next_action = dist.rsample()
@@ -148,29 +139,15 @@ class SACAgent(Agent):
 
         # get current Q estimates
         current_Q1, current_Q2 = self.critic(obs, action)
-
-        if step >= 360000:
-            weighted_loss = False
-
-        if weighted_loss:
-            critic_loss = (weight * F.mse_loss(current_Q1, target_Q, reduction='none').flatten() + weight * F.mse_loss(
-            current_Q2, target_Q, reduction='none').flatten()).mean()
-        else:
-            critic_loss = F.mse_loss(current_Q1, target_Q) + F.mse_loss(
+        critic_loss = F.mse_loss(current_Q1, target_Q) + F.mse_loss(
             current_Q2, target_Q)
-        
         if self.wandb and step % 5000 == 0:
             wandb.log({'Q_loss':critic_loss}, step=step)
-            if weighted_loss:
-                wandb.log({'w_mean':weight.mean().item(), 'w_max':weight.max().item(), 
-                           'w_min':weight.min().item()}, step=step)
 
         # Optimize the critic
         self.critic_optimizer.zero_grad()
         critic_loss.backward()
         self.critic_optimizer.step()
-        
-        return critic_loss.item()
         
     def update_critic_state_ent(
         self, obs, full_obs, action, next_obs, not_done,
@@ -184,14 +161,26 @@ class SACAgent(Agent):
         
         # compute state entropy
         state_entropy = compute_state_entropy(obs, full_obs, k=K)
+        state_entropy_max = state_entropy.max()
+        state_entropy_min = state_entropy.min()
 
-        self.s_ent_stats.update(state_entropy)
-        norm_state_entropy = state_entropy / self.s_ent_stats.std
-
-        if self.normalize_state_entropy:
-            state_entropy = norm_state_entropy
         
-        target_Q = state_entropy + (not_done * self.discount * target_V)
+        if state_entropy_max > self.s_ent_stats[1]:
+            self.s_ent_stats[1] = state_entropy_max
+        if state_entropy_min < self.s_ent_stats[0]:
+            self.s_ent_stats[0] = state_entropy_min
+        
+        self.state_ent.update(state_entropy)
+
+        # normalize to [-1, 1]
+        norm_state_entropy = (state_entropy - self.state_ent.mean) / (3*self.state_ent.std)
+        torch.clip(norm_state_entropy, -1, 1, out=norm_state_entropy)
+        # scale = ((self.s_ent_stats - self.state_ent.mean) / self.state_ent.std).abs().max()
+        # norm_state_entropy /= scale
+        # norm_state_entropy = ((state_entropy - self.s_ent_stats[0]) / (self.s_ent_stats[1] - self.s_ent_stats[0]) - 0.5 ) * 2
+
+                
+        target_Q = norm_state_entropy + (not_done * self.discount * target_V)
         target_Q = target_Q.detach()
 
         # get current Q estimates
@@ -203,7 +192,7 @@ class SACAgent(Agent):
         self.critic_optimizer.zero_grad()
         critic_loss.backward()
         self.critic_optimizer.step()
-    
+        return norm_state_entropy.cpu().detach().numpy()    
     def save(self, model_dir, step):
         torch.save(
             self.actor.state_dict(), '%s/actor_%s.pt' % (model_dir, step)
@@ -226,22 +215,14 @@ class SACAgent(Agent):
             torch.load('%s/critic_target_%s.pt' % (model_dir, step))
         )
     
-    def update_actor_and_alpha(self, obs, step, weight=1, weighted_loss=False):
+    def update_actor_and_alpha(self, obs, step):
         dist = self.actor(obs)
         action = dist.rsample()
         log_prob = dist.log_prob(action).sum(-1, keepdim=True)
         actor_Q1, actor_Q2 = self.critic(obs, action)
 
         actor_Q = torch.min(actor_Q1, actor_Q2)
-
-        if step >= 360000:
-            weighted_loss = False
-
-        if weighted_loss:
-            actor_loss = ((self.alpha.detach() * log_prob - actor_Q) * weight).mean()
-        else:
-            actor_loss = (self.alpha.detach() * log_prob - actor_Q).mean()
-
+        actor_loss = (self.alpha.detach() * log_prob - actor_Q).mean()
         if self.wandb and step % 5000 == 0:
             wandb.log({'actor_loss':actor_loss}, step=step)
 
@@ -249,7 +230,6 @@ class SACAgent(Agent):
         self.actor_optimizer.zero_grad()
         actor_loss.backward()
         self.actor_optimizer.step()
-
         if self.learnable_temperature:
             self.log_alpha_optimizer.zero_grad()
             alpha_loss = (self.alpha *
@@ -261,71 +241,10 @@ class SACAgent(Agent):
         for index in range(gradient_update):
             obs, action, reward, next_obs, not_done, not_done_no_max = replay_buffer.sample(
                 self.batch_size)
-
-            critic_loss = self.update_critic(obs, action, reward, next_obs, not_done_no_max, step)
-
-            if step % self.actor_update_frequency == 0:
-                self.update_actor_and_alpha(obs, step)
-
-        if step % self.critic_target_update_frequency == 0:
-            utils.soft_update_params(self.critic, self.critic_target,
-                                     self.critic_tau)
-    
-    def update_onpolicy_sample(self, replay_buffer, step, size, gradient_update=1, her_ratio=0.5):
-        for index in range(gradient_update):
-            obs, action, reward, next_obs, not_done, not_done_no_max = replay_buffer.sample(
-                int(self.batch_size*(1-her_ratio)))
-            obs_on, action_on, reward_on, next_obs_on, not_done_on, not_done_no_max_on = replay_buffer.sample_onpolicy(
-                int(self.batch_size*(her_ratio)), size=size)
-            
-            obs = torch.cat([obs, obs_on], axis=0)
-            action = torch.cat([action, action_on], axis=0)
-            reward = torch.cat([reward, reward_on], axis=0)
-            next_obs = torch.cat([next_obs, next_obs_on], axis=0)
-            not_done_no_max = torch.cat([not_done_no_max, not_done_no_max_on], axis=0)
-
-            critic_loss = self.update_critic(obs, action, reward, next_obs, not_done_no_max, step)
-
-            if step % self.actor_update_frequency == 0:
-                self.update_actor_and_alpha(obs, step)
-
-        if step % self.critic_target_update_frequency == 0:
-            utils.soft_update_params(self.critic, self.critic_target,
-                                     self.critic_tau)
-    
-    def update_critic_only(self, replay_buffer, step, gradient_update=1):
-        for index in range(gradient_update):
-            obs, action, reward, next_obs, not_done, not_done_no_max = replay_buffer.sample(
-                self.batch_size)
-                
             self.update_critic(obs, action, reward, next_obs, not_done_no_max, step)
 
-        if step % self.critic_target_update_frequency == 0:
-            utils.soft_update_params(self.critic, self.critic_target,
-                                     self.critic_tau)
-    
-    def update_with_uncertainty(self, beta, disc, reward_model, replay_buffer, step, gradient_update=1):
-        for index in range(gradient_update):
-            obs, action, reward, next_obs, not_done, not_done_no_max = replay_buffer.sample(
-                self.batch_size)
-            
-            sa_t = torch.cat([obs, action], axis=-1)
-            _, disagree = reward_model.r_hat_disagreement(sa_t)
-            dl_dd = disc.predict(sa_t).flatten()
-
-            weight = beta / disagree
-            # weight[weight > 100] = 100
-            weight = weight ** 0.2
-            weight = weight / weight.mean()
-
-            # dl_dd = dl_dd ** 0.2
-            weight = dl_dd / dl_dd.mean()
-                
-            self.update_critic(obs, action, reward, next_obs, not_done_no_max,
-                               step, weight, weighted_loss=True)
-
             if step % self.actor_update_frequency == 0:
-                self.update_actor_and_alpha(obs, step, weight, weighted_loss=True)
+                self.update_actor_and_alpha(obs, step)
 
         if step % self.critic_target_update_frequency == 0:
             utils.soft_update_params(self.critic, self.critic_target,
@@ -350,7 +269,7 @@ class SACAgent(Agent):
             obs, full_obs, action, reward, next_obs, not_done, not_done_no_max = replay_buffer.sample_state_ent(
                 self.batch_size)
                 
-            self.update_critic_state_ent(
+            state_entropy =  self.update_critic_state_ent(
                 obs, full_obs, action, next_obs, not_done_no_max, step, K=K)
 
             if step % self.actor_update_frequency == 0:
@@ -359,3 +278,4 @@ class SACAgent(Agent):
         if step % self.critic_target_update_frequency == 0:
             utils.soft_update_params(self.critic, self.critic_target,
                                      self.critic_tau)
+        return obs.cpu().detach().numpy(), action.cpu().detach().numpy(), state_entropy

@@ -1,6 +1,6 @@
 agent:
-  name: sac_metaworld
-  class: agent.sac.SACAgent
+  name: sac_rime  # Updated from sac_pebble based on RIME.py
+  class: agent.sac_rime.SACAgent  # Update this class path if your RIME SAC agent is located elsewhere
   params:
     obs_dim: ??? # to be specified later
     action_dim: ??? # to be specified later
@@ -12,30 +12,32 @@ agent:
     init_temperature: 0.1
     alpha_lr: 1e-4
     alpha_betas: [0.9, 0.999]
-    actor_lr: 1e-4
+    actor_lr: 0.0005  # Updated from 1e-4
     actor_betas: [0.9, 0.999]
     actor_update_frequency: 1
-    critic_lr: 1e-4
+    critic_lr: 0.0005  # Updated from 1e-4
     critic_betas: [0.9, 0.999]
     critic_tau: 0.005
     critic_target_update_frequency: 2
-    batch_size: 512 # 1024 for Walker, 512 for Meta-world
+    batch_size: 1024 # 1024 for Walker, 512 for Meta-world
     learnable_temperature: true
     wandb: ${wandb}
+    topK: 5  # Added from RIME.py
+    outer_weight: 0.1  # Added from RIME.py
     
 double_q_critic:
   class: agent.critic.DoubleQCritic
   params:
     obs_dim: ${agent.params.obs_dim}
     action_dim: ${agent.params.action_dim}
-    hidden_dim: 256
-    hidden_depth: 3
+    hidden_dim: 1024
+    hidden_depth: 2
     
 diag_gaussian_actor:
   class: agent.actor.DiagGaussianActor
   params:
     obs_dim: ${agent.params.obs_dim}
     action_dim: ${agent.params.action_dim}
-    hidden_depth: 3
-    hidden_dim: 256
+    hidden_depth: 2
+    hidden_dim: 1024
     log_std_bounds: [-5, 2]

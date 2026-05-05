@@ -70,6 +70,7 @@ def get_single_human_label(
     trajectory_id: int,
     size_segment: int,
     fig: plt.figure = None,
+    frame_dim=(200, 350)
 ):
     """
     Open a popup window showing both trajectories side by side with
@@ -77,26 +78,29 @@ def get_single_human_label(
 
     Returns a dictionary containing the vote value, times, and replay counts.
     """
-    seg1 = np.clip(segment1.reshape(size_segment, 240, 380, 3), 0, 255).astype(np.uint8)
-    seg2 = np.clip(segment2.reshape(size_segment, 240, 380, 3), 0, 255).astype(np.uint8)
+    seg1 = np.clip(segment1.reshape(size_segment, frame_dim[0], frame_dim[1], 3), 0, 255).astype(np.uint8)
+    seg2 = np.clip(segment2.reshape(size_segment, frame_dim[0], frame_dim[1], 3), 0, 255).astype(np.uint8)
     n_frames = size_segment
 
-    if fig is None:
-        fig = plt.figure(figsize=(14, 9), facecolor=BG)
-    else:
-        fig.canvas.mouse_grabber = None
-        if hasattr(fig, 'buttons'):
-            for btn in fig.buttons:
-                btn.disconnect_events()
-        fig.clf()
+    # if fig is None:
+    #     fig = plt.figure(figsize=(14, 9), facecolor=BG)
+    # else:
+    #     fig.canvas.mouse_grabber = None
+    #     if hasattr(fig, 'buttons'):
+    #         for btn in fig.buttons:
+    #             btn.disconnect_events()
+    #     fig.clf()
         
-        # --- MODIFIED: Only show/raise if hidden ---
-        # This prevents the window from "flashing" between every comparison
-        if hasattr(fig.canvas.manager, 'window'):
-             fig.canvas.manager.window.show()
-             # Only raise to top on the very first comparison of a session
-             if trajectory_id == 0:
-                 fig.canvas.manager.window.raise_()
+    #     # --- MODIFIED: Only show/raise if hidden ---
+    #     # This prevents the window from "flashing" between every comparison
+    #     if hasattr(fig.canvas.manager, 'window'):
+    #          fig.canvas.manager.window.show()
+    #          # Only raise to top on the very first comparison of a session
+    #          if trajectory_id == 0:
+    #              fig.canvas.manager.window.raise_()
+
+    fig = plt.figure(figsize=(14, 9), facecolor=BG)
+
 
     # ── Tracking Metrics ──────────────────────────────────────────────────────
     start_time = time.time()
@@ -237,18 +241,27 @@ def get_single_human_label(
 
     btn_va.on_clicked( lambda _: _vote(0,   "Prefer A",     ACCENT_A))
     btn_vb.on_clicked( lambda _: _vote(1,   "Prefer B",     ACCENT_B))
-    btn_veq.on_clicked(lambda _: _vote(0.5, "Equal",        GREEN))
-    btn_vnd.on_clicked(lambda _: _vote(-1,  "Can't Decide", GREY))
+    btn_veq.on_clicked(lambda _: _vote(-1, "Equal",        GREEN))
+    btn_vnd.on_clicked(lambda _: _vote(-2, "Can't Decide", GREY))
 
     fig.buttons = [btn_both, btn_ra, btn_rb, btn_va, btn_vb, btn_veq, btn_vnd]
 
-    # ── Block until vote is cast ──────────────────────────────────────────────
-    plt.show(block=False)
+    # # ── Block until vote is cast ──────────────────────────────────────────────
+    # plt.show(block=False)
 
+    # while plt.fignum_exists(fig.number) and result.get("value") is None:
+    #     plt.pause(0.1)
+
+    plt.show(block=False)
     while plt.fignum_exists(fig.number) and result.get("value") is None:
         plt.pause(0.1)
+    
+    # close immediately after vote
+    plt.close(fig)
 
-
+    if result["value"] is None:
+        result["value"] = -1
+        result["time_taken"] = time.time() - start_time
 
     return result
 
