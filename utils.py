@@ -12,7 +12,7 @@ from torch import nn
 from torch import distributions as pyd
 from omegaconf import OmegaConf, DictConfig
 from gymnasium.wrappers import RescaleAction
-
+import metaworld
 def flatten_dict(cfg, parent_key=''):
     if isinstance(cfg, DictConfig):
         # Convert DictConfig to a regular dictionary
