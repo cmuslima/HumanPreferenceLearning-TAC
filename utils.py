@@ -11,7 +11,7 @@ from shimmy import DmControlCompatibilityV0
 from torch import nn
 from torch import distributions as pyd
 from omegaconf import OmegaConf, DictConfig
-
+from gymnasium.wrappers import RescaleAction
 
 def flatten_dict(cfg, parent_key=''):
     if isinstance(cfg, DictConfig):
@@ -56,9 +56,20 @@ def make_env(cfg):
     env = gym.wrappers.FlattenObservation(env)
     env.action_space.seed(cfg.seed)        # add this
     env.observation_space.seed(cfg.seed)   # add this
-    # Now this assertion works using the standard Gym naming convention
-    assert env.action_space.low.min() >= -1
-    assert env.action_space.high.max() <= 1
+    # Check if the environment needs rescaling
+    needs_rescale = env.action_space.low.min() < -1.0 or env.action_space.high.max() > 1.0
+
+    if needs_rescale:
+        # This only executes for "new" environments that aren't -1 to 1
+        env = RescaleAction(env, min_action=-1.0, max_action=1.0)
+    else:
+        # This path is taken by your existing runs
+        # No wrapper is added, so the env remains exactly as it was
+        pass
+
+    # Final sanity check (replaces your manual asserts)
+    assert env.action_space.low.min() >= -1.0
+    assert env.action_space.high.max() <= 1.0
     env.unwrapped.spec = EnvSpec(
     id='dmc_env', 
     entry_point=None, 
