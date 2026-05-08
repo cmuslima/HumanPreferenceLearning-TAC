@@ -24,7 +24,7 @@ def gen_net(in_size=1, out_size=1, H=128, n_layers=3, activation='tanh'):
         net.append(nn.Tanh())
     elif activation == 'sig':
         net.append(nn.Sigmoid())
-    else:
+    elif activation == 'relu':
         net.append(nn.ReLU())
 
     return net
@@ -102,7 +102,7 @@ class RewardModel:
         self.max_size = max_size
         self.activation = activation
         self.size_segment = size_segment
-        self.alpha=1
+        self.alpha=0.1
 
         
         self.capacity = int(capacity)
@@ -164,7 +164,8 @@ class RewardModel:
             self.ensemble.append(model)
             self.paramlst.extend(model.parameters())
             
-        self.opt = torch.optim.Adam(self.paramlst, lr = self.lr)
+        self.opt = torch.optim.Adam(self.paramlst, lr=self.lr, weight_decay=1e-4)
+
     def add_data(self, obs, act, rew, done):
         sa_t = np.concatenate([obs, act], axis=-1)
         r_t = rew
@@ -642,17 +643,38 @@ class RewardModel:
 
                 r_diff = r_hat1 - r_hat2  # positive if traj1 preferred
                 r_diff = r_diff.view(-1)
-
-                s_ij = 1.0 - 2.0 * labels  # converts 0 to +1, 1 to -1
-
-                # soft Kendall-style loss: -s_ij * tanh(alpha * (r1 - r2))
                 
+                # # --- NEW: Reward Normalization ---
+                # # We calculate mean and std across the batch to keep r_diff 
+                # # within the sensitive range of tanh (approx -3 to 3).
+                # with torch.no_grad():
+                #     # We use mean/std of the raw rewards (r_hat1 and r_hat2 combined)
+                #     # to keep the global scale consistent.
+                    
+                #     r_mean = r_hat.mean()
+                #     r_std = r_hat.std() + 1e-8
+                
+                # # Apply normalization to the difference
+                # # This ensures r_diff stays mostly between [-2, 2]
+                # r_diff_norm = (r_diff) / r_std
+                
+                # #print(f"Raw r_diff: {r_diff}")
+                # #print(f"Norm r_diff: {r_diff_norm}")
+
+                s_ij = 1.0 - 2.0 * labels  # converts 0 (pref traj1) to +1, 1 to -1
+
+                # Use the normalized difference here
+                # alpha should now be small (e.g., 1.0) since scale is controlled
                 agreement = torch.tanh(self.alpha * r_diff)
-                agreement = agreement.view(-1)  # or agreement = agreement.squeeze(-1)
+                agreement = agreement.view(-1)
+                #print('agreement', agreement)
 
-
-                soft_loss = 1-s_ij * agreement
+                # The soft_loss is now calculated on the normalized slope
+                soft_loss = 1.0 - (s_ij * agreement)
                 curr_loss = soft_loss.mean()
+                #print(f"r_diff_norm stats: min={r_diff_norm.min():.3f}, max={r_diff_norm.max():.3f}, mean={r_diff_norm.mean():.3f}")
+                print(f"tanh output stats: min={agreement.min():.3f}, max={agreement.max():.3f}")
+                print(f"loss range: {soft_loss.min().item():.3f} to {soft_loss.max().item():.3f}")
 
                 # compute loss
                 loss += curr_loss
@@ -663,6 +685,25 @@ class RewardModel:
                 pred = (r_hat1 > r_hat2).float()
                 pred = pred.view(-1)
                 
+
+                # Inside your member loop after calculating r_diff
+                with torch.no_grad():
+                    # 1. Boolean masks
+                    # pred: 1 if r1 > r2, else 0. labels: 0 if r1 preferred, 1 if r2 preferred.
+                    correct_mask = (pred == (1.0 - labels))
+                    incorrect_mask = ~correct_mask
+
+                    # 2. Formula for dL/d_rdiff
+                    # Recall: dL/dr_diff = -s_ij * alpha * (1 - tanh^2(alpha * r_diff))
+                    # We take the absolute value to see the "magnitude" of the push
+                    grad_magnitudes = torch.abs(-s_ij * self.alpha * (1 - torch.pow(agreement, 2)))
+
+                    # 3. Calculate means safely
+                    mean_grad_correct = grad_magnitudes[correct_mask].mean().item() if correct_mask.any() else 0.0
+                    mean_grad_incorrect = grad_magnitudes[incorrect_mask].mean().item() if incorrect_mask.any() else 0.0
+
+                print(f"[{member}] Correct Grad: {mean_grad_correct:.6f} | Incorrect Grad: {mean_grad_incorrect:.6f}")
+                    
                 correct = (pred == (1.0 - labels)).sum().item()
 
                 ensemble_acc[member] += correct
