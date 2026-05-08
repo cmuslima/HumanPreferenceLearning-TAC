@@ -3,6 +3,9 @@ defaults:
     
 # this needs to be specified manually
 experiment: MRN
+wandb: true
+wandb_project: PbRL_Human_Preferences_Benchmarking
+wandb_entity: musliman
 
 # reward learning
 segment: 50
@@ -27,7 +30,7 @@ teacher_eps_mistake: 0
 teacher_eps_skip: 0
 teacher_eps_equal: 0
 outer_weight: 0.1
-
+alpha: 1
 # scheduling
 reward_schedule: 0
 
@@ -52,6 +55,11 @@ seed: 1
 # Environment
 env: dog_stand
 gradient_update: 1
+env_suite: dmc # or metaworld
+#user study params
+user_study: 0
+render_frames: 0
+frame_size: [125, 200]
 
 # hydra configuration
 hydra:

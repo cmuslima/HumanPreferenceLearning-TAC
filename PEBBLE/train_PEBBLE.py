@@ -25,7 +25,7 @@ class Workspace(object):
     def __init__(self, cfg):
         self.work_dir = os.getcwd()
         self.cfg = cfg
-
+        print('here')
         utils.set_seed_everywhere(cfg.seed)
         self.device = torch.device(cfg.device)
         self.log_success = False
@@ -69,7 +69,8 @@ class Workspace(object):
             teacher_gamma=cfg.teacher_gamma,
             teacher_eps_mistake=cfg.teacher_eps_mistake,
             teacher_eps_skip=cfg.teacher_eps_skip,
-            teacher_eps_equal=cfg.teacher_eps_equal)
+            teacher_eps_equal=cfg.teacher_eps_equal, 
+            alpha=cfg.alpha)
     def evaluate(self):
         average_predicted_episode_reward = 0
         average_true_episode_reward = 0
@@ -150,7 +151,7 @@ class Workspace(object):
         train_predicted_episode_reward=0
         # store train returns of recent 10 episodes
         avg_train_true_return = deque([], maxlen=10)
-
+        print('run')
         interact_count = 0
         start_time = time.time()
         while self.step < self.cfg.num_train_steps:

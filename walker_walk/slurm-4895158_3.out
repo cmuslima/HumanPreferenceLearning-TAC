@@ -1,0 +1,73 @@
+Starting training... alpha=0.3, seed=3
+/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/hydra/_internal/config_loader.py:10: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import (
+/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/pkg_resources/__init__.py:3143: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('google')`.
+Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+  declare_namespace(pkg)
+/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/analytics/sentry.py:90: SentryHubDeprecationWarning: `sentry_sdk.Hub` is deprecated and will be removed in a future major release. Please consult our 1.x to 2.x migration guide for details on how to migrate `Hub` usage to the new API: https://docs.sentry.io/platforms/python/migration/1.x-to-2.x
+  self.hub = sentry_sdk.Hub(client)
+wandb: - 0.008 MB of 0.015 MB uploadedwandb: \ 0.015 MB of 0.015 MB uploadedException in thread Exception in thread ChkStopThr:
+Traceback (most recent call last):
+  File "/cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v4/Compiler/gcccore/python/3.10.13/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+IntMsgThr:
+Traceback (most recent call last):
+  File "/cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v4/Compiler/gcccore/python/3.10.13/lib/python3.10/threading.py", line 1016, in _bootstrap_inner
+    self.run()
+  File "/cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v4/Compiler/gcccore/python/3.10.13/lib/python3.10/threading.py", line 953, in run
+    self.run()
+  File "/cvmfs/soft.computecanada.ca/easybuild/software/2023/x86-64-v4/Compiler/gcccore/python/3.10.13/lib/python3.10/threading.py", line 953, in run
+    self._target(*self._args, **self._kwargs)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 300, in check_internal_messages
+    self._target(*self._args, **self._kwargs)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 286, in check_stop_status
+    self._loop_check_status(
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 224, in _loop_check_status
+    self._loop_check_status(
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/wandb_run.py", line 224, in _loop_check_status
+    local_handle = request()
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/interface/interface.py", line 766, in deliver_internal_messages
+    local_handle = request()
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/interface/interface.py", line 750, in deliver_stop_status
+    return self._deliver_stop_status(status)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 468, in _deliver_stop_status
+    return self._deliver_internal_messages(internal_message)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 490, in _deliver_internal_messages
+    return self._deliver_record(record)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 437, in _deliver_record
+    return self._deliver_record(record)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/interface/interface_shared.py", line 437, in _deliver_record
+    handle = mailbox._deliver_record(record, interface=self)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/lib/mailbox.py", line 455, in _deliver_record
+    handle = mailbox._deliver_record(record, interface=self)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/lib/mailbox.py", line 455, in _deliver_record
+    interface._publish(record)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    interface._publish(record)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/interface/interface_sock.py", line 51, in _publish
+    self._sock_client.send_record_publish(record)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self._sock_client.send_record_publish(record)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 221, in send_record_publish
+    self.send_server_request(server_req)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self.send_server_request(server_req)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 155, in send_server_request
+    self._send_message(msg)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._send_message(msg)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 152, in _send_message
+    self._sendall_with_error_handle(header + data)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    self._sendall_with_error_handle(header + data)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/sdk/lib/sock_client.py", line 130, in _sendall_with_error_handle
+    sent = self._sock.send(data)
+BrokenPipeError    : [Errno 32] Broken pipe
+sent = self._sock.send(data)
+BrokenPipeError: [Errno 32] Broken pipe
+[2026-05-07 19:39:07,967][urllib3.connectionpool][WARNING] - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'OSError('Tunnel connection failed: 403 Forbidden')': /api/4504800232407040/envelope/
+[2026-05-07 19:39:07,968][urllib3.connectionpool][WARNING] - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'OSError('Tunnel connection failed: 403 Forbidden')': /api/4504800232407040/envelope/
+[2026-05-07 19:39:07,969][urllib3.connectionpool][WARNING] - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'OSError('Tunnel connection failed: 403 Forbidden')': /api/4504800232407040/envelope/
+[2026-05-07 19:39:07,971][urllib3.connectionpool][WARNING] - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'OSError('Tunnel connection failed: 403 Forbidden')': /api/4504800232407040/envelope/
+[2026-05-07 19:39:07,971][urllib3.connectionpool][WARNING] - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'OSError('Tunnel connection failed: 403 Forbidden')': /api/4504800232407040/envelope/
+[2026-05-07 19:39:07,972][urllib3.connectionpool][WARNING] - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'OSError('Tunnel connection failed: 403 Forbidden')': /api/4504800232407040/envelope/
+Run time: 4195s

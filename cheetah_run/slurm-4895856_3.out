@@ -1,0 +1,33 @@
+Starting training... alpha=10, seed=3
+/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/hydra/_internal/config_loader.py:10: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import (
+/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/pkg_resources/__init__.py:3143: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('google')`.
+Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+  declare_namespace(pkg)
+/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/analytics/sentry.py:90: SentryHubDeprecationWarning: `sentry_sdk.Hub` is deprecated and will be removed in a future major release. Please consult our 1.x to 2.x migration guide for details on how to migrate `Hub` usage to the new API: https://docs.sentry.io/platforms/python/migration/1.x-to-2.x
+  self.hub = sentry_sdk.Hub(client)
+Traceback (most recent call last):
+  File "/scratch/cmuslima/HumanPreferenceLearning-TAC/MRN/train_MRN.py", line 421, in <module>
+    main()
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/hydra/main.py", line 20, in decorated_main
+    run_hydra(
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/hydra/_internal/utils.py", line 171, in run_hydra
+    hydra.run(
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/hydra/_internal/hydra.py", line 82, in run
+    return run_job(
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/hydra/plugins/common/utils.py", line 109, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "/scratch/cmuslima/HumanPreferenceLearning-TAC/MRN/train_MRN.py", line 410, in main
+    workspace = Workspace(cfg)
+  File "/scratch/cmuslima/HumanPreferenceLearning-TAC/MRN/train_MRN.py", line 38, in __init__
+    self.env = utils.make_env(cfg)
+  File "/scratch/cmuslima/HumanPreferenceLearning-TAC/utils.py", line 48, in make_env
+    if cfg.render_frames:
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/omegaconf/dictconfig.py", line 85, in __getattr__
+    return self.get(key=key, default_value=None)
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/omegaconf/dictconfig.py", line 98, in get
+    value=self.get_node(key, default_value),
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/omegaconf/dictconfig.py", line 107, in get_node
+    raise KeyError(
+KeyError: 'Accessing unknown key in a struct : render_frames'
+Run time: 4s

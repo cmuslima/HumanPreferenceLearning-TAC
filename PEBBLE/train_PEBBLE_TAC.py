@@ -69,7 +69,8 @@ class Workspace(object):
             teacher_gamma=cfg.teacher_gamma,
             teacher_eps_mistake=cfg.teacher_eps_mistake,
             teacher_eps_skip=cfg.teacher_eps_skip,
-            teacher_eps_equal=cfg.teacher_eps_equal)
+            teacher_eps_equal=cfg.teacher_eps_equal,
+            alpha=cfg.alpha)
     def evaluate(self):
         average_predicted_episode_reward = 0
         average_true_episode_reward = 0
