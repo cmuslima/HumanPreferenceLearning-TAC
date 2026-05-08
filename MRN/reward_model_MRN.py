@@ -91,7 +91,7 @@ class RewardModel:
                  teacher_beta=-1, teacher_gamma=1,
                  teacher_eps_mistake=0,
                  teacher_eps_skip=0,
-                 teacher_eps_equal=0):
+                 teacher_eps_equal=0, alpha=1):
 
         # train data is trajectories, must process to sa and s..
         self.ds = ds
@@ -105,6 +105,7 @@ class RewardModel:
         self.max_size = max_size
         self.activation = activation
         self.size_segment = size_segment
+        self.alpha=alpha
 
         self.capacity = int(capacity)
         self.buffer_seg1 = np.empty((self.capacity, size_segment, self.ds + self.da), dtype=np.float32)
@@ -589,6 +590,83 @@ class RewardModel:
 
         return len(labels)
 
+    def train_reward_tac(self):
+
+        ensemble_losses = [[] for _ in range(self.de)]
+        ensemble_acc = np.array([0 for _ in range(self.de)])
+        
+        max_len = self.capacity if self.buffer_full else self.buffer_index
+        total_batch_index = []
+        for _ in range(self.de):
+            total_batch_index.append(np.random.permutation(max_len))
+        
+        num_epochs = int(np.ceil(max_len/self.train_batch_size))
+        list_debug_loss1, list_debug_loss2 = [], []
+        total = 0
+        
+        for epoch in range(num_epochs):
+            self.opt.zero_grad()
+            loss = 0.0
+            
+            last_index = (epoch+1)*self.train_batch_size
+            if last_index > max_len:
+                last_index = max_len
+                
+            for member in range(self.de):
+                
+                # get random batch
+                idxs = total_batch_index[member][epoch*self.train_batch_size:last_index]
+                sa_t_1 = self.buffer_seg1[idxs]
+                sa_t_2 = self.buffer_seg2[idxs]
+                labels = self.buffer_label[idxs]
+                labels = torch.from_numpy(labels.flatten()).long().to(device)
+                
+                if member == 0:
+                    total += labels.size(0)
+                
+                # get logits
+                r_hat1 = self.r_hat_member(sa_t_1, member=member)
+                r_hat2 = self.r_hat_member(sa_t_2, member=member)
+                r_hat1 = r_hat1.sum(axis=1)
+                r_hat2 = r_hat2.sum(axis=1)
+                r_hat = torch.cat([r_hat1, r_hat2], axis=-1)
+
+
+
+                r_diff = r_hat1 - r_hat2  # positive if traj1 preferred
+                r_diff = r_diff.view(-1)
+
+                s_ij = 1.0 - 2.0 * labels  # converts 0 to +1, 1 to -1
+
+                # soft Kendall-style loss: -s_ij * tanh(alpha * (r1 - r2))
+                
+                agreement = torch.tanh(self.alpha * r_diff)
+                agreement = agreement.view(-1)  # or agreement = agreement.squeeze(-1)
+
+
+                soft_loss = 1-s_ij * agreement
+                curr_loss = soft_loss.mean()
+
+                # compute loss
+                loss += curr_loss
+                ensemble_losses[member].append(curr_loss.item())
+                
+
+                # compute accuracy (agreement with preference)
+                pred = (r_hat1 > r_hat2).float()
+                pred = pred.view(-1)
+                
+                correct = (pred == (1.0 - labels)).sum().item()
+
+                ensemble_acc[member] += correct
+                
+            loss.backward()
+            self.opt.step()
+        
+        ensemble_acc = ensemble_acc / total
+        
+        return ensemble_acc, np.mean(ensemble_losses)
+
     def train_reward(self):
         ensemble_losses = [[] for _ in range(self.de)]
         ensemble_acc = np.array([0 for _ in range(self.de)])
@@ -629,7 +707,7 @@ class RewardModel:
                 r_hat = torch.cat([r_hat1, r_hat2], axis=-1)
 
                 # compute loss
-                curr_loss = self.CEloss(r_hat, labels)
+                curr_loss = self.CEloss(self.alpha*r_hat, labels)
                 loss += curr_loss
                 ensemble_losses[member].append(curr_loss.item())
 
@@ -643,7 +721,7 @@ class RewardModel:
 
         ensemble_acc = ensemble_acc / total
 
-        return ensemble_acc
+        return ensemble_acc, np.mean(ensemble_losses)
 
     def train_soft_reward(self):
         ensemble_losses = [[] for _ in range(self.de)]

@@ -87,7 +87,7 @@ class RewardModel:
                  teacher_beta=-1, teacher_gamma=1, 
                  teacher_eps_mistake=0, 
                  teacher_eps_skip=0, 
-                 teacher_eps_equal=0):
+                 teacher_eps_equal=0, alpha=1):
         
         # train data is trajectories, must process to sa and s..   
         self.ds = ds
@@ -102,7 +102,7 @@ class RewardModel:
         self.max_size = max_size
         self.activation = activation
         self.size_segment = size_segment
-        self.alpha=0.1
+        self.alpha=alpha
 
         
         self.capacity = int(capacity)
@@ -599,6 +599,99 @@ class RewardModel:
         
         return len(labels)
     
+    def train_reward_tac_v2(self):
+        ensemble_losses = [[] for _ in range(self.de)]
+        ensemble_acc = np.array([0 for _ in range(self.de)])
+        
+        max_len = self.capacity if self.buffer_full else self.buffer_index
+        total_batch_index = []
+        for _ in range(self.de):
+            total_batch_index.append(np.random.permutation(max_len))
+        
+        num_epochs = int(np.ceil(max_len/self.train_batch_size))
+        list_debug_loss1, list_debug_loss2 = [], []
+        total = 0
+        
+        for epoch in range(num_epochs):
+            self.opt.zero_grad()
+            loss = 0.0
+            
+            last_index = (epoch+1)*self.train_batch_size
+            if last_index > max_len:
+                last_index = max_len
+                
+            for member in range(self.de):
+                
+                # get random batch
+                idxs = total_batch_index[member][epoch*self.train_batch_size:last_index]
+                sa_t_1 = self.buffer_seg1[idxs]
+                sa_t_2 = self.buffer_seg2[idxs]
+                labels = self.buffer_label[idxs]
+                labels = torch.from_numpy(labels.flatten()).long().to(self.device)
+                
+                if member == 0:
+                    total += labels.size(0)
+                
+                # get logits
+                r_hat1 = self.r_hat_member(sa_t_1, member=member)
+                r_hat2 = self.r_hat_member(sa_t_2, member=member)
+                r_hat1 = r_hat1.sum(axis=1)
+                r_hat2 = r_hat2.sum(axis=1)
+                r_hat = torch.cat([r_hat1, r_hat2], axis=-1)
+
+
+# 1. Get Reward Difference
+                r_diff = r_hat1 - r_hat2  
+                r_diff = r_diff.view(-1)
+
+                # 2. Bradley-Terry "Soft" Probabilities
+                # prob_1: Model's probability that traj1 is better than traj2
+                prob_1 = torch.sigmoid(self.alpha * r_diff)
+                prob_2 = 1.0 - prob_1
+
+                # 3. Calculate Soft P (Agreement) and Q (Disagreement)
+                # labels: 0 if traj1 is ground-truth preferred, 1 if traj2 is preferred
+                is_1_preferred = (labels == 0).float()
+                is_2_preferred = (labels == 1).float()
+
+                # P is the sum of probabilities assigned to the correct trajectories
+                # Q is the sum of probabilities assigned to the incorrect trajectories
+                P = torch.sum(is_1_preferred * prob_1 + is_2_preferred * prob_2)
+                Q = torch.sum(is_1_preferred * prob_2 + is_2_preferred * prob_1)
+
+                # 4. Calculate Sigma_TAC (Equation 3)
+                # Assuming X0 and Y0 are 0 if there are no ties in your labels
+                numerator = P - Q
+                # Denominator uses (P+Q) which is effectively the batch size N
+                denominator = torch.sqrt((P + Q) * (P + Q) + 1e-8) 
+                
+                sigma_tac = numerator / denominator
+
+                # 5. Define Loss: We want to maximize correlation, so minimize (1 - sigma_tac)
+                curr_loss = 1.0 - sigma_tac
+
+                # compute loss
+                loss += curr_loss
+
+                ensemble_losses[member].append(curr_loss.item())
+                
+
+                # compute accuracy (agreement with preference)
+                pred = (r_hat1 > r_hat2).float()
+                pred = pred.view(-1)
+                
+                correct = (pred == (1.0 - labels)).sum().item()
+
+                ensemble_acc[member] += correct
+                
+            loss.backward()
+            self.opt.step()
+        
+        ensemble_acc = ensemble_acc / total
+        
+        return ensemble_acc, np.mean(ensemble_losses)
+
+
     def train_reward(self):
         ensemble_losses = [[] for _ in range(self.de)]
         ensemble_acc = np.array([0 for _ in range(self.de)])
@@ -643,38 +736,17 @@ class RewardModel:
 
                 r_diff = r_hat1 - r_hat2  # positive if traj1 preferred
                 r_diff = r_diff.view(-1)
-                
-                # # --- NEW: Reward Normalization ---
-                # # We calculate mean and std across the batch to keep r_diff 
-                # # within the sensitive range of tanh (approx -3 to 3).
-                # with torch.no_grad():
-                #     # We use mean/std of the raw rewards (r_hat1 and r_hat2 combined)
-                #     # to keep the global scale consistent.
-                    
-                #     r_mean = r_hat.mean()
-                #     r_std = r_hat.std() + 1e-8
-                
-                # # Apply normalization to the difference
-                # # This ensures r_diff stays mostly between [-2, 2]
-                # r_diff_norm = (r_diff) / r_std
-                
-                # #print(f"Raw r_diff: {r_diff}")
-                # #print(f"Norm r_diff: {r_diff_norm}")
 
-                s_ij = 1.0 - 2.0 * labels  # converts 0 (pref traj1) to +1, 1 to -1
+                s_ij = 1.0 - 2.0 * labels  # converts 0 to +1, 1 to -1
 
-                # Use the normalized difference here
-                # alpha should now be small (e.g., 1.0) since scale is controlled
+                # soft Kendall-style loss: -s_ij * tanh(alpha * (r1 - r2))
+                
                 agreement = torch.tanh(self.alpha * r_diff)
-                agreement = agreement.view(-1)
-                #print('agreement', agreement)
+                agreement = agreement.view(-1)  # or agreement = agreement.squeeze(-1)
 
-                # The soft_loss is now calculated on the normalized slope
-                soft_loss = 1.0 - (s_ij * agreement)
+
+                soft_loss = 1-s_ij * agreement
                 curr_loss = soft_loss.mean()
-                #print(f"r_diff_norm stats: min={r_diff_norm.min():.3f}, max={r_diff_norm.max():.3f}, mean={r_diff_norm.mean():.3f}")
-                print(f"tanh output stats: min={agreement.min():.3f}, max={agreement.max():.3f}")
-                print(f"loss range: {soft_loss.min().item():.3f} to {soft_loss.max().item():.3f}")
 
                 # compute loss
                 loss += curr_loss
@@ -685,25 +757,6 @@ class RewardModel:
                 pred = (r_hat1 > r_hat2).float()
                 pred = pred.view(-1)
                 
-
-                # Inside your member loop after calculating r_diff
-                with torch.no_grad():
-                    # 1. Boolean masks
-                    # pred: 1 if r1 > r2, else 0. labels: 0 if r1 preferred, 1 if r2 preferred.
-                    correct_mask = (pred == (1.0 - labels))
-                    incorrect_mask = ~correct_mask
-
-                    # 2. Formula for dL/d_rdiff
-                    # Recall: dL/dr_diff = -s_ij * alpha * (1 - tanh^2(alpha * r_diff))
-                    # We take the absolute value to see the "magnitude" of the push
-                    grad_magnitudes = torch.abs(-s_ij * self.alpha * (1 - torch.pow(agreement, 2)))
-
-                    # 3. Calculate means safely
-                    mean_grad_correct = grad_magnitudes[correct_mask].mean().item() if correct_mask.any() else 0.0
-                    mean_grad_incorrect = grad_magnitudes[incorrect_mask].mean().item() if incorrect_mask.any() else 0.0
-
-                print(f"[{member}] Correct Grad: {mean_grad_correct:.6f} | Incorrect Grad: {mean_grad_incorrect:.6f}")
-                    
                 correct = (pred == (1.0 - labels)).sum().item()
 
                 ensemble_acc[member] += correct

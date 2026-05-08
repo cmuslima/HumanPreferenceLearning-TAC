@@ -1,0 +1,33 @@
+Starting training... alpha=1, seed=0
+/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/hydra/_internal/config_loader.py:10: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import (
+/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/pkg_resources/__init__.py:3143: DeprecationWarning: Deprecated call to `pkg_resources.declare_namespace('google')`.
+Implementing implicit namespace packages (as specified in PEP 420) is preferred to `pkg_resources.declare_namespace`. See https://setuptools.pypa.io/en/latest/references/keywords.html#keyword-namespace-packages
+  declare_namespace(pkg)
+/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/wandb/analytics/sentry.py:90: SentryHubDeprecationWarning: `sentry_sdk.Hub` is deprecated and will be removed in a future major release. Please consult our 1.x to 2.x migration guide for details on how to migrate `Hub` usage to the new API: https://docs.sentry.io/platforms/python/migration/1.x-to-2.x
+  self.hub = sentry_sdk.Hub(client)
+Traceback (most recent call last):
+  File "/scratch/cmuslima/HumanPreferenceLearning-TAC/MRN/train_MRN.py", line 420, in <module>
+    main()
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/hydra/main.py", line 20, in decorated_main
+    run_hydra(
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/hydra/_internal/utils.py", line 171, in run_hydra
+    hydra.run(
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/hydra/_internal/hydra.py", line 82, in run
+    return run_job(
+  File "/project/aip-mtaylor3/cmuslima/ENV/lib/python3.10/site-packages/hydra/plugins/common/utils.py", line 109, in run_job
+    ret.return_value = task_function(task_cfg)
+  File "/scratch/cmuslima/HumanPreferenceLearning-TAC/MRN/train_MRN.py", line 417, in main
+    workspace.run()
+  File "/scratch/cmuslima/HumanPreferenceLearning-TAC/MRN/train_MRN.py", line 337, in run
+    self.learn_reward(first_flag=1)
+  File "/scratch/cmuslima/HumanPreferenceLearning-TAC/MRN/train_MRN.py", line 140, in learn_reward
+    train_acc, reward_loss  = self.reward_model.train_reward()
+ValueError: too many values to unpack (expected 2)
+[2026-05-07 22:44:16,958][urllib3.connectionpool][WARNING] - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'OSError('Tunnel connection failed: 403 Forbidden')': /api/4504800232407040/envelope/
+[2026-05-07 22:44:16,960][urllib3.connectionpool][WARNING] - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'OSError('Tunnel connection failed: 403 Forbidden')': /api/4504800232407040/envelope/
+[2026-05-07 22:44:16,961][urllib3.connectionpool][WARNING] - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'OSError('Tunnel connection failed: 403 Forbidden')': /api/4504800232407040/envelope/
+[2026-05-07 22:44:16,964][urllib3.connectionpool][WARNING] - Retrying (Retry(total=2, connect=None, read=None, redirect=None, status=None)) after connection broken by 'OSError('Tunnel connection failed: 403 Forbidden')': /api/4504800232407040/envelope/
+[2026-05-07 22:44:16,966][urllib3.connectionpool][WARNING] - Retrying (Retry(total=1, connect=None, read=None, redirect=None, status=None)) after connection broken by 'OSError('Tunnel connection failed: 403 Forbidden')': /api/4504800232407040/envelope/
+[2026-05-07 22:44:16,967][urllib3.connectionpool][WARNING] - Retrying (Retry(total=0, connect=None, read=None, redirect=None, status=None)) after connection broken by 'OSError('Tunnel connection failed: 403 Forbidden')': /api/4504800232407040/envelope/
+Run time: 205s

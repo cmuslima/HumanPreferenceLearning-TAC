@@ -87,7 +87,8 @@ class RewardModel:
                  teacher_beta=-1, teacher_gamma=1, 
                  teacher_eps_mistake=0, 
                  teacher_eps_skip=0, 
-                 teacher_eps_equal=0):
+                 teacher_eps_equal=0, alpha=1):
+        print('alpha value', alpha)
         
         # train data is trajectories, must process to sa and s..   
         self.ds = ds
@@ -102,6 +103,7 @@ class RewardModel:
         self.max_size = max_size
         self.activation = activation
         self.size_segment = size_segment
+        self.alpha=alpha
         
         self.capacity = int(capacity)
         self.buffer_seg1 = np.empty((self.capacity, size_segment, self.ds+self.da), dtype=np.float32)
@@ -637,7 +639,7 @@ class RewardModel:
                 r_hat = torch.cat([r_hat1, r_hat2], axis=-1)
 
                 # compute loss
-                curr_loss = self.CEloss(r_hat, labels)
+                curr_loss = self.CEloss(self.alpha*r_hat, labels)
                 loss += curr_loss
                 ensemble_losses[member].append(curr_loss.item())
                 

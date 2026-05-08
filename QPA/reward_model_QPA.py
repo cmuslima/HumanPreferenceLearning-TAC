@@ -92,7 +92,8 @@ class RewardModel:
                  weight_factor=1.0,
                  adv_mu=2,
                  path=None,
-                 data_aug_ratio=1):
+                 data_aug_ratio=1,
+                 alpha=1):
         
         # train data is trajectories, must process to sa and s..   
         self.ds = ds
@@ -110,6 +111,7 @@ class RewardModel:
         self.path = path
         self.data_aug_ratio = data_aug_ratio
         self.count = 0
+        self.alpha= alpha
         
         self.capacity = int(capacity)
         self.buffer_seg1 = np.empty((self.capacity, size_segment, self.ds+self.da), dtype=np.float32)
@@ -652,7 +654,7 @@ class RewardModel:
                 r_hat = torch.cat([r_hat1, r_hat2], axis=-1)
 
                 # compute loss
-                curr_loss = self.CEloss(r_hat, labels)
+                curr_loss = self.CEloss(self.alpha*r_hat, labels)
                 loss += curr_loss
                 ensemble_losses[member].append(curr_loss.item())
                 
@@ -738,7 +740,7 @@ class RewardModel:
                 r_hat = torch.cat([r_hat1, r_hat2], axis=-1)
 
                 # compute loss
-                curr_loss = self.CEloss(r_hat, labels)
+                curr_loss = self.CEloss(self.alpha*r_hat, labels)
                 loss += curr_loss
                 ensemble_losses[member].append(curr_loss.item())
                 

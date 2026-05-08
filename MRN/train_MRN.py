@@ -59,7 +59,6 @@ class Workspace(object):
         self.reward_model = RewardModel(
             self.env.observation_space.shape[0],
             self.env.action_space.shape[0],
-            device=cfg.device,
             ensemble_size=cfg.ensemble_size,
             size_segment=cfg.segment,
             activation=cfg.activation,
@@ -71,7 +70,8 @@ class Workspace(object):
             teacher_gamma=cfg.teacher_gamma,
             teacher_eps_mistake=cfg.teacher_eps_mistake,
             teacher_eps_skip=cfg.teacher_eps_skip,
-            teacher_eps_equal=cfg.teacher_eps_equal)
+            teacher_eps_equal=cfg.teacher_eps_equal,
+            alpha=cfg.alpha)
     def evaluate(self):
         average_predicted_episode_reward = 0
         average_true_episode_reward = 0
