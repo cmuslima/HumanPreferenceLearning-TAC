@@ -408,9 +408,9 @@ class Workspace(object):
 def main(cfg):
     workspace = Workspace(cfg)
     wandb.init(
-        project="PbRL_Human_Preferences_Benchmarking",
+        project="soft_tac",
         config=utils.flatten_dict(dict(cfg)),
-        name=f'MRN_{cfg.env}_{cfg.max_feedback}_{cfg.seed}',
+        name=f'MRN_TAC_{cfg.env}_{cfg.max_feedback}_{cfg.seed}',
         entity="musliman",
         mode='online',
     )

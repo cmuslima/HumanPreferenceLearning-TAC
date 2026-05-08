@@ -5,7 +5,6 @@ import torch.nn.functional as F
 import torch.utils.data as data
 import torch.optim as optim
 import itertools
-import tqdm
 import copy
 import scipy.stats as st
 import os

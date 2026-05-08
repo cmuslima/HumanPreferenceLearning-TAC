@@ -249,8 +249,6 @@ class Workspace(object):
         actor_loss.backward()
         self.agent.actor_optimizer.step()
 
-        self.agent.actor.log(self.logger, self.step)
-
         if self.agent.learnable_temperature:
             self.agent.log_alpha_optimizer.zero_grad()
             alpha_loss = (self.agent.alpha * (-log_prob - self.agent.target_entropy).detach()).mean()
@@ -408,7 +406,7 @@ class Workspace(object):
 def main(cfg):
     workspace = Workspace(cfg)
     wandb.init(
-        project="PbRL_Human_Preferences_Benchmarking",
+        project="soft_tac",
         config=utils.flatten_dict(dict(cfg)),
         name=f'MRN_{cfg.env}_{cfg.max_feedback}_{cfg.seed}',
         entity="musliman",
