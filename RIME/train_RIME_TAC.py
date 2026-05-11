@@ -149,7 +149,7 @@ class Workspace(object):
             for epoch in range(self.cfg.reward_update):
                 if epoch % 5 == 0 or epoch == self.cfg.reward_update - 1:
                     debug = True
-                train_acc, reward_loss  = self.reward_model.train_reward()
+                train_acc, reward_loss  = self.reward_model.train_tac_reward()
                 total_acc = np.mean(train_acc)
                 # early stop
                 if total_acc > 0.98 and epoch > self.cfg.least_reward_update:
@@ -320,7 +320,7 @@ def main(cfg):
     wandb.init(
         project="PbRL_Human_Preferences_Benchmarking",
         config=utils.flatten_dict(dict(cfg)),
-        name=f'RIME_{cfg.experiment}_{cfg.env}_{cfg.max_feedback}_{cfg.seed}',
+        name=f'RIME_TAC_{cfg.experiment}_{cfg.env}_{cfg.max_feedback}_{cfg.seed}',
         entity="musliman",
         mode='online',
     )

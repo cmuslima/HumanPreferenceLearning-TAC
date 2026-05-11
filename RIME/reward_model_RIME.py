@@ -100,9 +100,10 @@ class RewardModel:
         threshold_beta_init=3.0,
         threshold_beta_min=1.0,
         flipping_tau=0.001,
-        num_warmup_steps=50):
+        num_warmup_steps=50, alpha=1):
         
         # train data is trajectories, must process to sa and s..   
+        self.alpha=alpha
         self.ds = ds
         self.da = da
         self.device = device
@@ -759,4 +760,150 @@ class RewardModel:
         ensemble_acc = ensemble_acc / total
         self.update_step += 1
         
-        return ensemble_acc
+        return ensemble_acc, np.mean(ensemble_losses)
+
+
+
+
+
+    def train_tac_reward(self, debug=False, trust_sample=True, label_flipping=True):
+        ensemble_losses = [[] for _ in range(self.de)]
+        ensemble_acc = np.array([0 for _ in range(self.de)])
+        max_len = self.capacity if self.buffer_full else self.buffer_index
+
+        # compute trust samples
+        p_hat_all = []
+        with torch.no_grad():
+            for member in range(self.de):
+                r_hat1 = self.r_hat_member(self.buffer_seg1[:max_len], member=member)
+                r_hat2 = self.r_hat_member(self.buffer_seg2[:max_len], member=member)
+                r_hat1 = r_hat1.sum(axis=1)
+                r_hat2 = r_hat2.sum(axis=1)
+                r_hat = torch.cat([r_hat1, r_hat2], axis=-1)  # (max_len, 2)
+                p_hat_all.append(F.softmax(r_hat, dim=-1).cpu())
+        
+        # predict label for all ensemble members
+        p_hat_all = torch.stack(p_hat_all)  # (de, max_len, 2)
+        
+        # compute KL divergence
+        predict_label = p_hat_all.mean(0)  # (max_len, 2)
+        if self.label_margin > 0 or self.teacher_eps_equal > 0:
+            buffer_label = torch.tensor(self.buffer_label[:max_len].flatten()).long()
+            target_label = torch.zeros_like(predict_label)
+            temp_buffer_label = torch.clamp(buffer_label, min=0)
+            target_label.scatter_(1, temp_buffer_label.unsqueeze(1), 1)
+            mask = buffer_label == -1
+            target_label[mask, :] = 0.5
+        else:
+            target_label = torch.zeros_like(predict_label).scatter(1, torch.from_numpy(self.buffer_label[:max_len].flatten()).long().unsqueeze(1), 1)
+        
+        KL_div = (-target_label * torch.log(predict_label)).sum(1)  # (max_len,)
+        
+        # filter trust samples
+        x = self.KL_div.max
+        baseline = -np.log(x + 1e-8) + self.threshold_alpha * x
+        if self.threshold_variance == 'prob':
+            uncertainty = self.get_threshold_beta() * predict_label[:, 0].std(0)
+        else:
+            uncertainty = min(self.get_threshold_beta() * self.KL_div.var, 3.0)
+        trust_sample_bool_index = KL_div < baseline + uncertainty
+        trust_sample_index = np.where(trust_sample_bool_index)[0]
+
+        # label flipping
+        flipping_threshold = -np.log(self.flipping_tau)
+        flipping_sample_bool_index = KL_div > flipping_threshold
+        flipping_sample_index = np.where(flipping_sample_bool_index)[0]
+        
+        # update KL divergence statistics of trust samples
+        self.KL_div.update(KL_div[trust_sample_bool_index].numpy())
+
+        if trust_sample and label_flipping:
+            # temporarily flipping
+            self.buffer_label[flipping_sample_index] = 1-self.buffer_label[flipping_sample_index]
+            training_sample_index = np.concatenate([trust_sample_index, flipping_sample_index])
+        elif not trust_sample and label_flipping:
+            # temporarily flipping
+            self.buffer_label[flipping_sample_index] = 1-self.buffer_label[flipping_sample_index]
+            training_sample_index = np.arange(max_len)
+        elif trust_sample and not label_flipping:
+            training_sample_index = trust_sample_index
+        else:
+            training_sample_index = np.arange(max_len)
+        
+        max_len = len(training_sample_index)
+        total_batch_index = []
+        for _ in range(self.de):
+            total_batch_index.append(np.random.permutation(training_sample_index))
+        
+        num_epochs = int(np.ceil(max_len/self.train_batch_size))
+        total = 0
+        
+        for epoch in range(num_epochs):
+            self.opt.zero_grad()
+            loss = 0.0
+            
+            last_index = (epoch+1)*self.train_batch_size
+            if last_index > max_len:
+                last_index = max_len
+                
+            for member in range(self.de):
+                
+                # get random batch
+                idxs = total_batch_index[member][epoch*self.train_batch_size:last_index]
+                sa_t_1 = self.buffer_seg1[idxs]
+                sa_t_2 = self.buffer_seg2[idxs]
+                labels = self.buffer_label[idxs]
+                labels = torch.from_numpy(labels.flatten()).long().to(self.device)
+                
+                if member == 0:
+                    total += labels.size(0)
+                
+                # get logits
+                r_hat1 = self.r_hat_member(sa_t_1, member=member)
+                r_hat2 = self.r_hat_member(sa_t_2, member=member)
+                r_hat1 = r_hat1.sum(axis=1)
+                r_hat2 = r_hat2.sum(axis=1)
+                r_hat = torch.cat([r_hat1, r_hat2], axis=-1)
+
+
+                r_diff = r_hat1 - r_hat2  # positive if traj1 preferred
+                r_diff = r_diff.view(-1)
+
+                s_ij = 1.0 - 2.0 * labels  # converts 0 to +1, 1 to -1
+
+                # soft Kendall-style loss: -s_ij * tanh(alpha * (r1 - r2))
+                
+                agreement = torch.tanh(self.alpha * r_diff)
+                agreement = agreement.view(-1)  # or agreement = agreement.squeeze(-1)
+
+
+                soft_loss = 1-s_ij * agreement
+                curr_loss = soft_loss.mean()
+
+
+                loss += curr_loss
+                ensemble_losses[member].append(curr_loss.item())
+                
+
+                # compute accuracy (agreement with preference)
+                pred = (r_hat1 > r_hat2).float()
+                pred = pred.view(-1)
+                
+                correct = (pred == (1.0 - labels)).sum().item()
+
+                ensemble_acc[member] += correct
+                
+            loss.backward()
+            self.opt.step()
+        
+        self.lr_schedule.step()
+        
+        # change back
+        if label_flipping:
+            self.buffer_label[flipping_sample_index] = 1-self.buffer_label[flipping_sample_index]
+        
+        ensemble_acc = ensemble_acc / total
+        self.update_step += 1
+        
+        return ensemble_acc, np.mean(ensemble_losses)
+
