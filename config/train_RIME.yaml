@@ -59,7 +59,10 @@ alpha: 1
 env: walker_walk
 gradient_update: 1
 env_suite: dmc # or metaworld
-
+#user study params
+user_study: 0
+render_frames: 0
+frame_size: [125, 200]
 # hydra configuration
 hydra:
   name: ${env}
