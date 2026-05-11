@@ -3,6 +3,10 @@ defaults:
     
 # this needs to be specified manually
 experiment: RIME
+wandb: true
+wandb_project: soft_tac
+wandb_entity: musliman
+
 
 # reward learning
 segment: 50
@@ -26,11 +30,10 @@ teacher_gamma: 1.0
 teacher_eps_mistake: 0.0
 teacher_eps_skip: 0.0
 teacher_eps_equal: 0.0
-outer_weight: 0.1
 threshold_variance: kl
-threshold_alpha: 1.0
-threshold_beta_init: 2.0
-threshold_beta_min: 0.1
+threshold_alpha: 0.5
+threshold_beta_init: 3.0
+threshold_beta_min: 1.0
 
 # scheduling
 reward_schedule: 0
@@ -49,7 +52,6 @@ log_save_tb: false
 
 # video recorder
 save_video: false
-alpha: 1
 # setups
 seed: 42
 alpha: 1
@@ -62,4 +64,4 @@ env_suite: dmc # or metaworld
 hydra:
   name: ${env}
   run:
-    dir: ./exp/${env}/${experiment}/H${diag_gaussian_actor.params.hidden_dim}_L${diag_gaussian_actor.params.hidden_depth}_lr${agent.params.actor_lr}/teacher_b${teacher_beta}_g${teacher_gamma}_m${teacher_eps_mistake}_s${teacher_eps_skip}_e${teacher_eps_equal}/init${num_seed_steps}_unsup${num_unsup_steps}_inter${num_interact}_seg${segment}_act${activation}_Rlr${reward_lr}_Rupdate${reward_update}_en${ensemble_size}_sample${feed_type}_large_batch${large_batch}_schedule_${reward_schedule}_label_smooth_${label_margin}/${experiment}_maxfeed${max_feedback}_Rbatch${reward_batch}_seed${seed}
+    dir: ./exp/${experiment}/${env}/H${diag_gaussian_actor.params.hidden_dim}_L${diag_gaussian_actor.params.hidden_depth}_lr${agent.params.actor_lr}/teacher_b${teacher_beta}_g${teacher_gamma}_m${teacher_eps_mistake}_s${teacher_eps_skip}_e${teacher_eps_equal}/init${num_seed_steps}_unsup${num_unsup_steps}_inter${num_interact}_seg${segment}_act${activation}_Rlr${reward_lr}_Rupdate${reward_update}_en${ensemble_size}_sample${feed_type}_large_batch${large_batch}_schedule_${reward_schedule}_label_smooth_${label_margin}/${experiment}_maxfeed${max_feedback}_Rbatch${reward_batch}_seed${seed}
