@@ -249,7 +249,6 @@ class Workspace(object):
         actor_loss.backward()
         self.agent.actor_optimizer.step()
 
-        self.agent.actor.log(self.logger, self.step)
 
         if self.agent.learnable_temperature:
             self.agent.log_alpha_optimizer.zero_grad()
