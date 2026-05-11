@@ -62,7 +62,7 @@ class Workspace(object):
         self.step = 0
 
         # instantiating the reward model
-        self.reward_model = RIMERewardModel(
+        self.reward_model = RewardModel(
             device=self.device,
             k=k,
             threshold_variance=cfg.threshold_variance,
