@@ -84,7 +84,8 @@ class Workspace(object):
             teacher_gamma=cfg.teacher_gamma,
             teacher_eps_mistake=cfg.teacher_eps_mistake,
             teacher_eps_skip=cfg.teacher_eps_skip,
-            teacher_eps_equal=cfg.teacher_eps_equal)
+            teacher_eps_equal=cfg.teacher_eps_equal,
+            alpha=cfg.alpha)
     def evaluate(self):
         average_predicted_episode_reward = 0
         average_true_episode_reward = 0
@@ -320,7 +321,7 @@ def main(cfg):
     wandb.init(
         project="PbRL_Human_Preferences_Benchmarking",
         config=utils.flatten_dict(dict(cfg)),
-        name=f'RIME_{cfg.experiment}_{cfg.env}_{cfg.max_feedback}_{cfg.seed}',
+        name=f'RIME_{cfg.env}_{cfg.experiment}_{cfg.max_feedback}_{cfg.seed}',
         entity="musliman",
         mode='online',
     )

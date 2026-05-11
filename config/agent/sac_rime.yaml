@@ -22,8 +22,6 @@ agent:
     batch_size: 1024 # 1024 for Walker, 512 for Meta-world
     learnable_temperature: true
     wandb: ${wandb}
-    topK: 5  # Added from RIME.py
-    outer_weight: 0.1  # Added from RIME.py
     
 double_q_critic:
   class: agent.critic.DoubleQCritic
