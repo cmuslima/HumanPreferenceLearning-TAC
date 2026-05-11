@@ -52,7 +52,7 @@ save_video: false
 alpha: 1
 # setups
 seed: 42
-
+alpha: 1
 # Environment
 env: walker_walk
 gradient_update: 1

@@ -739,7 +739,7 @@ class RewardModel:
                         target_onehot[uniform_index] = 0.5
                     curr_loss = self.softXEnt_loss(r_hat, target_onehot)
                 else:
-                    curr_loss = self.CEloss(r_hat, labels)
+                    curr_loss = self.CEloss(self.alpha*r_hat, labels)
                 loss += curr_loss
                 ensemble_losses[member].append(curr_loss.item())
                 
