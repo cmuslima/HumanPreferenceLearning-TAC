@@ -253,7 +253,41 @@ class SquashedNormal(pyd.transformed_distribution.TransformedDistribution):
         for tr in self.transforms:
             mu = tr(mu)
         return mu
-    
+
+class RunningMeanStd:
+    def __init__(self, mean=0, std=1.0, epsilon=np.finfo(np.float32).eps.item(), 
+                 mode='common', lr=0.1):
+        self.mean, self.var = mean, std
+        self.max = mean
+        self.count = 0
+        self.eps = epsilon
+        self.lr = lr
+        self.mode = mode
+
+    def update(self, data_array) -> None:
+        """Add a batch of item into RMS with the same shape, modify mean/var/count."""
+        batch_mean, batch_var = np.mean(data_array, axis=0), np.var(data_array, axis=0)
+        batch_count = len(data_array)
+
+        delta = batch_mean - self.mean
+        total_count = self.count + batch_count
+
+        if self.mode == 'common':
+            new_mean = self.mean + delta * batch_count / total_count
+            new_max = self.max + (np.max(data_array)-self.max) / total_count
+        else:
+            new_mean = self.mean + delta * self.lr
+            new_max = self.max + (np.max(data_array)-self.max) * self.lr
+        
+        m_a = self.var * self.count
+        m_b = batch_var * batch_count
+        m_2 = m_a + m_b + delta**2 * self.count * batch_count / total_count
+        new_var = m_2 / total_count
+
+        self.mean, self.var = new_mean, new_var
+        self.count = total_count
+        self.max = new_max
+            
 class TorchRunningMeanStd:
     def __init__(self, epsilon=1e-4, shape=(), device=None):
         self.mean = torch.zeros(shape, device=device)
